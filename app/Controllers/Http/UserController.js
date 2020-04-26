@@ -33,9 +33,6 @@ class UserController {
     const data = request.only(["name", "identify_number", "type", "phone", "email", "unit_id"])
 
     user.merge(data)
-
-    console.log(user)
-
     await user.save();
 
     return user

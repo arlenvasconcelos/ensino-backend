@@ -51,3 +51,13 @@ Route.group(()=>{
   Route.put('/api/courses/:id', 'CourseController.update')
   Route.delete('/api/courses/:id', 'CourseController.destroy')
 })
+
+//Students
+Route.group(()=>{
+  Route.get('/api/students', 'StudentController.index')
+  Route.get('/api/students/:id', 'StudentController.show')
+  Route.post('/api/students', 'StudentController.store')
+  Route.put('/api/students/:id', 'StudentController.update')
+  Route.delete('/api/students/:id', 'StudentController.destroy')
+})
+
