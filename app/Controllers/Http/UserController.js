@@ -25,7 +25,7 @@ class UserController {
     return user
   }
 
-  async update ({ params }) {
+  async update ({ params, request}) {
 
     const user = await User.findBy('id', params.id)
     //dont get password
