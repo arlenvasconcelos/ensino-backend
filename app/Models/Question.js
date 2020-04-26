@@ -4,6 +4,9 @@
 const Model = use('Model')
 
 class Question extends Model {
+  document () {
+    return this.belongsTo('App/Models/Document')
+  }
 }
 
 module.exports = Question

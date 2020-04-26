@@ -7,6 +7,10 @@ class Document extends Model {
   solicitation () {
     return this.belongsTo('App/Models/Solicitation')
   }
+
+  questions () {
+    return this.hasMany('App/Models/Question')
+  }
 }
 
 module.exports = Document
