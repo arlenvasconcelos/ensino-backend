@@ -51,7 +51,7 @@ class SolicitationController {
    */
   async show ({ params, request, response, view }) {
 
-      const solicitation = await Solicitation.query().where('id', '=', params.id).with('student').fetch()
+      const solicitation = await Solicitation.query().where('id', '=', params.id).with('student').with('documents').fetch()
       return solicitation
 
   }

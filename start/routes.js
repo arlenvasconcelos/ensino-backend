@@ -70,3 +70,12 @@ Route.group(()=>{
   Route.put('/api/solicitations/:id', 'SolicitationController.update')
   Route.delete('/api/solicitations/:id', 'SolicitationController.destroy')
 })
+
+//Documents
+Route.group(()=>{
+  Route.get('/api/documents', 'DocumentController.index')
+  Route.get('/api/documents/:id', 'DocumentController.show')
+  Route.post('/api/documents', 'DocumentController.store')
+  Route.put('/api/documents/:id', 'DocumentController.update')
+  Route.delete('/api/documents/:id', 'DocumentController.destroy')
+})
