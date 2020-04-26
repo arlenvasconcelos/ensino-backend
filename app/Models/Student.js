@@ -8,6 +8,10 @@ class Student extends Model {
   course () {
     return this.belongsTo('App/Models/Course')
   }
+
+  solicitations () {
+    return this.hasMany('App/Models/Solicitation')
+  }
 }
 
 module.exports = Student

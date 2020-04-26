@@ -7,7 +7,6 @@ class StudentController {
   async index () {
 
     const students = await Student.all()
-
     return students;
   }
 
