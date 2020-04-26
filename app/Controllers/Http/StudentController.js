@@ -1,13 +1,13 @@
 'use strict'
 
-const User = use("App/Models/User")
+const Student = use("App/Models/Student")
 
 class StudentController {
 
   async index () {
 
-    // const users = await User.query().with('unit').orderBy('name', 'asc').fetch();
     const students = await Student.all()
+
     return students;
   }
 

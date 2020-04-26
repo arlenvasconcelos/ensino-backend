@@ -50,6 +50,8 @@ class CourseController {
    * @param {View} ctx.view
    */
   async show ({ params, request, response, view }) {
+
+    //Fazer condição caso não tenha estudantes cadastrados
     const course = await Course.query().where('id', '=', params.id).with('students').fetch()
     return course;
   }
