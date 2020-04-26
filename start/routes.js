@@ -27,10 +27,18 @@ Route.group(()=>{
   Route.post('/api/users', 'UserController.store')
   Route.put('/api/users/:id', 'UserController.update')
   Route.delete('/api/users/:id', 'UserController.destroy')
-
 })
 
 //Sessions
 Route.group(()=>{
   Route.post('/api/sessions', 'SessionController.store')
+})
+
+//Units
+Route.group(()=>{
+  Route.get('/api/units', 'UnitController.index')
+  Route.get('/api/units/:id', 'UnitController.show')
+  Route.post('/api/units', 'UnitController.store')
+  Route.put('/api/units/:id', 'UnitController.update')
+  Route.delete('/api/units/:id', 'UnitController.destroy')
 })
