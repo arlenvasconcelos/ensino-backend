@@ -37,7 +37,11 @@ class DocumentController {
    *
    */
   async show ({ params, request, response, view }) {
-    const document = await Document.query().where('id', '=', params.id).with('solicitation').fetch()
+    const document = await Document.findOrFail(params.id)
+
+    await document.load('solicitation')
+    await document.load('attachments')
+    await document.load('questions')
     return document
   }
 
