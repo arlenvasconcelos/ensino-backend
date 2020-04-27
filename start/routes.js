@@ -82,4 +82,6 @@ Route.group(()=>{
 })
 
 //Attachments
-Route.get('/tmp/uploads/:path', 'AttachmentController.show')
+Route.group(()=>{
+  Route.get('/api/uploads/:path', 'AttachmentController.show')
+})

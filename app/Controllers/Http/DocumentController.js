@@ -42,6 +42,7 @@ class DocumentController {
     await document.load('solicitation')
     await document.load('attachments')
     await document.load('questions')
+
     return document
   }
 
@@ -54,7 +55,7 @@ class DocumentController {
   async update ({ params, request, response }) {
     //Some params dont be chenged
     const data = await request.only(['name','status'])
-    const document = await Document.find(params.index)
+    const document = await Document.findOrFail(params.index)
 
     document.merge(data)
     await document.save()
