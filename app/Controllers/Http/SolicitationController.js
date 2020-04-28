@@ -2,7 +2,12 @@
 
 const STATUS_DOC = {
   'CREATED': 'created',
-  'SEND': 'send',
+  'SENT': 'sent',
+}
+
+const STATUS_SOLICITATION = {
+  'CREATED': 'created',
+  'SENT': 'sent',
 }
 
 /** @typedef {import('@adonisjs/framework/src/Request')} Request */
@@ -39,8 +44,8 @@ class SolicitationController {
    * @param {Response} ctx.response
    */
   async store ({ request, response }) {
-    const data = request.only(['type', 'student_id', 'status', 'created_by'])
-    const solicitation = await Solicitation.create(data)
+    const data = request.only(['type', 'student_id', 'created_by'])
+    const solicitation = await Solicitation.create({...data, status: STATUS_SOLICITATION.CREATED})
 
     return solicitation
   }
@@ -71,7 +76,7 @@ class SolicitationController {
    * @param {Response} ctx.response
    */
   async update ({ params, request, response }) {
-    const data = request.only(['type', 'student_id', 'status', 'created_by'])
+    const data = request.only(['type', 'student_id', 'created_by'])
     const solicitation = await Solicitation.find(params.id)
 
     solicitation.merge(data)
@@ -107,7 +112,27 @@ class SolicitationController {
     }
 
     return response.badRequest({message: "O documento não foi preenchido"})
+  }
 
+
+  async send ({params, request, response}){
+    const solicitation = await Solicitation.findOrFail(params.id)
+
+    const countDocs = await solicitation.documents().getCount()
+
+    if (countDocs > 0){
+      await solicitation.documents()
+        .where('solicitation_id', params.id)
+        .update({ status: STATUS_DOC.SENT })
+    }
+    else {
+      return response.badRequest({message: "Solicitação não possui documentos"})
+    }
+
+    solicitation.merge({status: STATUS_SOLICITATION.SENT})
+    await solicitation.save()
+
+    return response.ok()
   }
 }
 
