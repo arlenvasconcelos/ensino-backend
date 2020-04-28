@@ -29,13 +29,13 @@ class QuestionController {
    * POST questions
    *
    */
-  async store ({ params, request, response }) {
-    const document = await Document.findOrFail(params.id)
-    const data = await request.only(['label','answer'])
-    const question = document.questions().create({...data, document_id: params.id});
+  // async store ({ params, request, response }) {
+  //   const document = await Document.findOrFail(params.id)
+  //   const data = await request.only(['label','answer'])
+  //   const question = document.questions().create({...data, document_id: params.id});
 
-    return question
-  }
+  //   return question
+  // }
 
   /**
    * Display a single question.

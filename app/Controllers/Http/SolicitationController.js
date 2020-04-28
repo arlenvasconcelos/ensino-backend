@@ -1,5 +1,10 @@
 'use strict'
 
+const STATUS_DOC = {
+  'CREATED': 'created',
+  'SEND': 'send',
+}
+
 /** @typedef {import('@adonisjs/framework/src/Request')} Request */
 /** @typedef {import('@adonisjs/framework/src/Response')} Response */
 /** @typedef {import('@adonisjs/framework/src/View')} View */
@@ -84,10 +89,25 @@ class SolicitationController {
    * @param {Response} ctx.response
    */
   async destroy ({ params, request, response }) {
-    const solicitation = await Solicitation.find(params.id)
+    const solicitation = await Solicitation.findOrFail(params.id)
     await solicitation.delete()
 
     return solicitation
+  }
+
+  async addDocument({params, request, response}){
+    const solicitation = await Solicitation.findOrFail(params.id)
+    const data = await request.only(['name','type','created_by'])//Pegar posteriormente o created_by pelo auth
+    const {questions} = await request.only(['questions']);
+    //Verifying if there are questions on Document
+    if (questions.length){
+      const document = await solicitation.documents().create({...data, status: STATUS_DOC.CREATED})
+      document.questions().createMany(questions)
+      return response.ok(document)
+    }
+
+    return response.badRequest({message: "O documento não foi preenchido"})
+
   }
 }
 
