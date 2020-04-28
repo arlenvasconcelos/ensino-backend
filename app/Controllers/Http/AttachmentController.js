@@ -13,6 +13,7 @@ class AttachmentController {
   }
 
   async store ({ params, request, response }) {
+
     const document = await Document.findOrFail(params.id)
     console.log(document.id)
 
@@ -20,10 +21,6 @@ class AttachmentController {
       types: ['image', 'pdf'],
       size: '2mb'
     })
-
-    // // await attachments.moveAll(Helpers.tmpPath('uploads'), file => ({
-    // //   name: `${Date.now()}- document${file.clientName}`
-    // // }))
 
     await attachments.moveAll(Helpers.tmpPath('uploads'), (file, i) => {
       return {

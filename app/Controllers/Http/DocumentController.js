@@ -69,7 +69,7 @@ class DocumentController {
    *
    */
   async destroy ({ params, request, response }) {
-    const document = await Document.find(params.index)
+    const document = await Document.findOrFail(params.index)
     await document.delete();
 
     return document
