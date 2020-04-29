@@ -127,14 +127,14 @@ class SolicitationController {
 
 
   async send ({params, request, response}){
-    const solicitation = await Solicitation.findOrFail(params.solicitation_id)
+    const solicitation = await Solicitation.findOrFail(params.id)
     const unit = await Unit.findOrFail(params.unit_id)
 
     const countDocs = await solicitation.documents().getCount()
 
     if (countDocs > 0){
       await solicitation.documents()
-        .where('solicitation_id', params.solicitation_id)
+        .where('solicitation_id', params.id)
         .update({ status: STATUS_DOC.SENT })
     }
     else {
@@ -148,7 +148,9 @@ class SolicitationController {
 
     solicitation.units = await solicitation.units().fetch()
 
-    return response.ok()
+    return response.ok({
+      message: 'Solicitação enviada.'
+    })
   }
 }
 
