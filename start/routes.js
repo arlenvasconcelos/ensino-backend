@@ -70,7 +70,7 @@ Route.group(()=>{
   Route.put('/api/solicitations/:id', 'SolicitationController.update')
   Route.delete('/api/solicitations/:id', 'SolicitationController.destroy')
   Route.post('/api/solicitations/:id/documents', 'SolicitationController.addDocument') //add document to Solicitation
-  Route.post('/api/solicitations/:id/send', 'SolicitationController.send') //Send solicitation
+  Route.post('/api/solicitations/:solicitation_id/send/:unit_id', 'SolicitationController.send') //Send solicitation
 })
 
 //Documents

@@ -8,6 +8,14 @@ class Unit extends Model {
   users () {
     return this.hasMany('App/Models/User')
   }
+
+
+
+  solicitations () {
+    return this
+      .belongsToMany('App/Models/Solicitation')
+      .pivotModel('App/Models/SolicitationUnit')
+  }
 }
 
 module.exports = Unit

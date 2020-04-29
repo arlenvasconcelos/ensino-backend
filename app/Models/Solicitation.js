@@ -11,6 +11,15 @@ class Solicitation extends Model {
   documents () {
     return this.hasMany('App/Models/Document')
   }
+
+  units () {
+    return this
+      .belongsToMany(
+        'App/Models/Unit',
+        // 'solicitation_id',
+        // 'unit_id'
+      ).pivotModel('App/Models/SolicitationUnit')
+  }
 }
 
 module.exports = Solicitation

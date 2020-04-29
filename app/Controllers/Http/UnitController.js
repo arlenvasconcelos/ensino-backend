@@ -51,7 +51,12 @@ class UnitController {
    */
   async show ({ params, request, response, view }) {
 
-    const unit = await Unit.query().where('id', '=', params.id).with('users').fetch()
+    const unit = await Unit
+      .query()
+      .where('id', '=', params.id)
+      .with('users')
+      .with('solicitations')
+      .fetch()
 
     return unit
   }

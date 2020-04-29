@@ -16,6 +16,7 @@ const STATUS_SOLICITATION = {
 /** @typedef {import('@adonisjs/framework/src/View')} View */
 
 const Solicitation = use('App/Models/Solicitation')
+const Unit = use('App/Models/Unit')
 /**
  * Resourceful controller for interacting with solicitations
  */
@@ -126,21 +127,26 @@ class SolicitationController {
 
 
   async send ({params, request, response}){
-    const solicitation = await Solicitation.findOrFail(params.id)
+    const solicitation = await Solicitation.findOrFail(params.solicitation_id)
+    const unit = await Unit.findOrFail(params.unit_id)
 
     const countDocs = await solicitation.documents().getCount()
 
     if (countDocs > 0){
       await solicitation.documents()
-        .where('solicitation_id', params.id)
+        .where('solicitation_id', params.solicitation_id)
         .update({ status: STATUS_DOC.SENT })
     }
     else {
       return response.badRequest({message: "Solicitação não possui documentos"})
     }
 
+    await solicitation.units().attach(params.unit_id);
+
     solicitation.merge({status: STATUS_SOLICITATION.SENT})
     await solicitation.save()
+
+    solicitation.units = await solicitation.units().fetch()
 
     return response.ok()
   }
