@@ -79,7 +79,7 @@ Route.group(()=>{
   Route.get('/api/documents/:id', 'DocumentController.show')
   Route.put('/api/documents/:id', 'DocumentController.update')
   Route.delete('/api/documents/:id', 'DocumentController.destroy')
-  Route.post('/api/documents/:id/attachments', 'AttachmentController.store')
+  Route.post('/api/documents/:id/attachments', 'AttachmentController.store') //Add attachment to document
 })
 
 //Attachments

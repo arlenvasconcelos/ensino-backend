@@ -8,6 +8,7 @@ const STATUS_DOC = {
 const STATUS_SOLICITATION = {
   'CREATED': 'created',
   'SENT': 'sent',
+  'FINISHED': 'finished',
 }
 
 /** @typedef {import('@adonisjs/framework/src/Request')} Request */
@@ -61,11 +62,15 @@ class SolicitationController {
    */
   async show ({ params, request, response, view }) {
 
-      const solicitation = await Solicitation.query().where('id', '=', params.id).with('student').with('documents').fetch()
+      const solicitation = await Solicitation
+        .query()
+        .where('id', '=', params.id)
+        .with('student')
+        .with('documents')
+        .fetch()
       return solicitation
 
   }
-
 
   /**
    * Update solicitation details.
@@ -76,13 +81,16 @@ class SolicitationController {
    * @param {Response} ctx.response
    */
   async update ({ params, request, response }) {
-    const data = request.only(['type', 'student_id', 'created_by'])
-    const solicitation = await Solicitation.find(params.id)
+    const data = request.only(['type'])
+    const solicitation = await Solicitation.findOrFail(params.id)
 
-    solicitation.merge(data)
-    await solicitation.save()
+    if (solicitation.status === STATUS_SOLICITATION.CREATED){
+      solicitation.merge(data)
+      await solicitation.save()
+      return response.ok(solicitation)
+    }
 
-    return solicitation
+    return response.badRequest({message: "Solicitação não pode ser editada"})
   }
 
   /**
@@ -95,9 +103,11 @@ class SolicitationController {
    */
   async destroy ({ params, request, response }) {
     const solicitation = await Solicitation.findOrFail(params.id)
-    await solicitation.delete()
-
-    return solicitation
+    if (solicitation.status === STATUS_SOLICITATION.CREATED){
+      await solicitation.delete()
+      return response.ok()
+    }
+    return response.badRequest({message: "Solicitação não pode ser excluída"})
   }
 
   async addDocument({params, request, response}){
@@ -111,7 +121,7 @@ class SolicitationController {
       return response.ok(document)
     }
 
-    return response.badRequest({message: "O documento não foi preenchido"})
+    return response.badRequest({message: "Documento não foi preenchido"})
   }
 
 

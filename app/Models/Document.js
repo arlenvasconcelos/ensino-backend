@@ -4,9 +4,6 @@
 const Model = use('Model')
 
 class Document extends Model {
-  solicitation () {
-    return this.belongsTo('App/Models/Solicitation')
-  }
 
   questions () {
     return this.hasMany('App/Models/Question')
