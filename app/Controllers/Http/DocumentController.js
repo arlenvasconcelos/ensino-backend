@@ -27,23 +27,7 @@ class DocumentController {
     return documents;
   }
 
-  /**
-   * Create/save a new document.
-   * POST documents
-   *
-   */
-  // async store ({ request, response }) {
-  //   const data = await request.only(['name','type','solicitation_id','created_by'])
-  //   const {questions} = await request.only(['questions']);
-  //   //Verifying if there are questions on Document
-  //   if (questions.length){
-  //     const document = await Document.create({...data, status: STATUS.CREATED})
-  //     document.questions().createMany(questions)
-  //     return response.ok(document)
-  //   }
 
-  //   return response.badRequest({message: "O documento não foi preenchido"})
-  // }
 
   /**
    * Display a single document.
@@ -52,8 +36,6 @@ class DocumentController {
    */
   async show ({ params, request, response, view }) {
     const document = await Document.findOrFail(params.id)
-
-    // await document.load('solicitation')
     await document.load('attachments')
     await document.load('questions')
 
@@ -69,12 +51,9 @@ class DocumentController {
   async update ({ params, request, response }) {
 
     const document = await Document.findOrFail(params.id)
+    const {name, questions} = await request.all()
 
     if (document.status === STATUS.CREATED){
-      const {name, questions} = await request.all()
-      document.merge({name: name})
-      await document.save()
-
       //Updating questions
       await Promise.all(
         questions.map(qstns => {
@@ -89,7 +68,6 @@ class DocumentController {
             })
             .first()
             .then(existingQuestion => {
-              console.log('okokoko')
               delete qstns.id
               if (existingQuestion) {
                 existingQuestion.merge(qstns)
@@ -100,10 +78,14 @@ class DocumentController {
             })
         })
       )
+      // Updating document
+      document.merge({name: name})
+      await document.save()
+
       return response.ok(document)
     }
 
-    return response.forbidden({message: "O documento já foi enviado e não pode ser excluído"})
+    return response.forbidden({message: "O documento já foi enviado e não pode ser atualizado"})
   }
 
   /**

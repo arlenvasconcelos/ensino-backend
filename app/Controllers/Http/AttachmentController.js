@@ -15,7 +15,7 @@ class AttachmentController {
   async store ({ params, request, response }) {
 
     const document = await Document.findOrFail(params.id)
-    console.log(document.id)
+
 
     const attachments = request.file('attachments', {
       types: ['image', 'pdf'],
