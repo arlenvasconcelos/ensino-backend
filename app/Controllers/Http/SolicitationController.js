@@ -25,10 +25,10 @@ class SolicitationController {
    * GET solicitations
    *
    */
-  async index ({ request, response }) {
+  async index ({ response }) {
     const solicitations = await Solicitation.all()
 
-    return response({
+    return response.ok({
       message: "Todas as solicitações",
       data: solicitations
     })
@@ -55,7 +55,7 @@ class SolicitationController {
    * GET solicitations/:id
    *
    */
-  async show ({ params, request, response }) {
+  async show ({ params, response }) {
 
       const solicitation = await Solicitation
         .query()
@@ -96,7 +96,7 @@ class SolicitationController {
    * DELETE solicitations/:id
    *
    */
-  async destroy ({ params, request, response }) {
+  async destroy ({ params, response }) {
     const solicitation = await Solicitation.findOrFail(params.id)
     if (solicitation.status === STATUS_SOLICITATION.CREATED){
       await solicitation.delete()

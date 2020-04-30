@@ -31,7 +31,7 @@ Route.group(()=>{
 
 //Sessions
 Route.group(()=>{
-  Route.post('/api/sessions', 'SessionController.store')
+  Route.post('/api/users/sessions', 'SessionController.store')
 })
 
 //Units
@@ -61,12 +61,16 @@ Route.group(()=>{
   Route.delete('/api/students/:id', 'StudentController.destroy').middleware('findStudent')
 })
 
+//Student Sessions
+Route.group(()=>{
+  Route.post('/api/students/sessions', 'StudentSessionController.store')
+})
 
 //Solicitations
 Route.group(()=>{
   Route.get('/api/solicitations', 'SolicitationController.index')
   Route.get('/api/solicitations/:id', 'SolicitationController.show').middleware('findSolicitation')
-  Route.post('/api/solicitations', 'SolicitationController.store')
+  Route.post('/api/solicitations', 'SolicitationController.store').middleware(['auth:jwt,auth:student'])
   Route.patch('/api/solicitations/:id', 'SolicitationController.update').middleware('findSolicitation')
   Route.delete('/api/solicitations/:id', 'SolicitationController.destroy').middleware('findSolicitation')
   Route

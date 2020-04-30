@@ -66,15 +66,26 @@ module.exports = {
   |
   */
   jwt: {
-    serializer: 'lucid',
-    model: 'App/Models/User',
-    scheme: 'jwt',
-    uid: 'email',
-    password: 'password',
-    options: {
-      secret: Env.get('APP_KEY')
-    }
-  },
+      serializer: 'lucid',
+      model: 'App/Models/User',
+      scheme: 'jwt',
+      uid: 'identify_number',
+      password: 'password',
+      options: {
+        secret: Env.get('APP_KEY')
+      }
+    },
+    student: {
+      serializer: 'lucid',
+      model: 'App/Models/Student',
+      scheme: 'jwt',
+      uid: 'identify_number',
+      password: 'password',
+      options: {
+        secret: Env.get('APP_KEY')
+      }
+    },
+  // },
 
   /*
   |--------------------------------------------------------------------------

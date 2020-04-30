@@ -1,10 +1,11 @@
 'use strict'
 
-class SessionController {
+class StudentSessionController {
   async store ({ request, response, auth }) {
     const { identify_number, password } = request.all()
 
-    const token = await auth.attempt(identify_number, password)
+    console.log(identify_number, password)
+    const token = await auth.authenticator('student').attempt(identify_number, password)
 
     return response.ok({
       message: "Login realizado com sucesso",
@@ -14,4 +15,4 @@ class SessionController {
   }
 }
 
-module.exports = SessionController
+module.exports = StudentSessionController
