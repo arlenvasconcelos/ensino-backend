@@ -1,6 +1,8 @@
 'use strict'
 
-const Attachment = use('App/Models/Attachment')
+/** @typedef {import('@adonisjs/framework/src/Request')} Request */
+/** @typedef {import('@adonisjs/framework/src/Response')} Response */
+
 const Document = use('App/Models/Document')
 const Helpers = use('Helpers')
 /**
@@ -15,7 +17,6 @@ class AttachmentController {
   async store ({ params, request, response }) {
 
     const document = await Document.findOrFail(params.id)
-
 
     const attachments = request.file('attachments', {
       types: ['image', 'pdf'],
@@ -38,6 +39,13 @@ class AttachmentController {
         .map(attachment =>
           document.attachments().create({ path: attachment.fileName }))
     )
+
+    const newAttachments = await document.attachments().fetch()
+
+    return response.ok({
+      message:"Anexo criado com sucesso",
+      data: newAttachments
+    })
   }
 
 }

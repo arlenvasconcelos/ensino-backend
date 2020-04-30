@@ -1,12 +1,16 @@
 'use strict'
 
 class SessionController {
-  async store ({ request, auth }) {
+  async store ({ request, response, auth }) {
     const { email, password } = request.all()
 
     const token = await auth.attempt(email, password)
 
-    return token
+    return response.ok({
+      message: "Login realizado com sucesso",
+      token,
+      logged: true
+    })
   }
 }
 

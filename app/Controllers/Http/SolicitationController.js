@@ -13,7 +13,6 @@ const STATUS_SOLICITATION = {
 
 /** @typedef {import('@adonisjs/framework/src/Request')} Request */
 /** @typedef {import('@adonisjs/framework/src/Response')} Response */
-/** @typedef {import('@adonisjs/framework/src/View')} View */
 
 const Solicitation = use('App/Models/Solicitation')
 const Unit = use('App/Models/Unit')
@@ -25,15 +24,14 @@ class SolicitationController {
    * Show a list of all solicitations.
    * GET solicitations
    *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   * @param {View} ctx.view
    */
-  async index ({ request, response, view }) {
+  async index ({ request, response }) {
     const solicitations = await Solicitation.all()
 
-    return solicitations
+    return response({
+      message: "Todas as solicitações",
+      data: solicitations
+    })
   }
 
 
@@ -41,27 +39,23 @@ class SolicitationController {
    * Create/save a new solicitation.
    * POST solicitations
    *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
    */
   async store ({ request, response }) {
     const data = request.only(['type', 'student_id', 'created_by'])
     const solicitation = await Solicitation.create({...data, status: STATUS_SOLICITATION.CREATED})
 
-    return solicitation
+    return response.created({
+      message: "Solicitação criada com sucesso.",
+      data: solicitation
+    })
   }
 
   /**
    * Display a single solicitation.
    * GET solicitations/:id
    *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   * @param {View} ctx.view
    */
-  async show ({ params, request, response, view }) {
+  async show ({ params, request, response }) {
 
       const solicitation = await Solicitation
         .query()
@@ -69,7 +63,10 @@ class SolicitationController {
         .with('student')
         .with('documents')
         .fetch()
-      return solicitation
+      return response.ok({
+        message: "Solicitação encontrada com sucesso",
+        data: solicitation
+      })
 
   }
 
@@ -77,9 +74,6 @@ class SolicitationController {
    * Update solicitation details.
    * PUT or PATCH solicitations/:id
    *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
    */
   async update ({ params, request, response }) {
     const data = request.only(['type'])
@@ -88,7 +82,10 @@ class SolicitationController {
     if (solicitation.status === STATUS_SOLICITATION.CREATED){
       solicitation.merge(data)
       await solicitation.save()
-      return response.ok(solicitation)
+      return response.ok({
+        message: "Solicitação atualizada com sucesso",
+        data: solicitation
+      })
     }
 
     return response.badRequest({message: "Solicitação não pode ser editada"})
@@ -98,15 +95,15 @@ class SolicitationController {
    * Delete a solicitation with id.
    * DELETE solicitations/:id
    *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
    */
   async destroy ({ params, request, response }) {
     const solicitation = await Solicitation.findOrFail(params.id)
     if (solicitation.status === STATUS_SOLICITATION.CREATED){
       await solicitation.delete()
-      return response.ok()
+      return response.ok({
+        message: 'Solicitação excluída com sucesso',
+        deleted: true
+      })
     }
     return response.badRequest({message: "Solicitação não pode ser excluída"})
   }
@@ -119,7 +116,10 @@ class SolicitationController {
     if (questions.length){
       const document = await solicitation.documents().create({...data, status: STATUS_DOC.CREATED})
       document.questions().createMany(questions)
-      return response.ok(document)
+      return response.created({
+        message: "Documento criado com sucesso",
+        data: document
+      })
     }
 
     return response.badRequest({message: "Documento não foi preenchido"})
@@ -146,10 +146,11 @@ class SolicitationController {
     solicitation.merge({status: STATUS_SOLICITATION.SENT})
     await solicitation.save()
 
-    solicitation.units = await solicitation.units().fetch()
+    solicitation.load(units)
 
     return response.ok({
-      message: 'Solicitação enviada.'
+      message: 'Solicitação enviada com sucesso',
+      data: solicitation
     })
   }
 }

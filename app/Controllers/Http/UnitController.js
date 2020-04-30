@@ -4,8 +4,6 @@ const Unit = use('App/Models/Unit')
 
 /** @typedef {import('@adonisjs/framework/src/Request')} Request */
 /** @typedef {import('@adonisjs/framework/src/Response')} Response */
-/** @typedef {import('@adonisjs/framework/src/View')} View */
-
 /**
  * Resourceful controller for interacting with units
  */
@@ -14,42 +12,37 @@ class UnitController {
    * Show a list of all units.
    * GET units
    *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   * @param {View} ctx.view
    */
-  async index ({ request, response, view }) {
+  async index ({ response }) {
     const units = await Unit.all()
-    return units
+    return response.ok({
+      message: "Todas as unidades",
+      data: units
+    })
   }
 
   /**
    * Create/save a new unit.
    * POST units
    *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
    */
   async store ({ request, response }) {
 
     const data = request.only(["name", "phone", "room"])
     const unit = await Unit.create(data)
 
-    return unit
+    return response.create({
+      message: "Unidade criada com sucesso.",
+      data: unit
+    })
   }
 
   /**
    * Display a single unit.
    * GET units/:id
    *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   * @param {View} ctx.view
    */
-  async show ({ params, request, response, view }) {
+  async show ({ params, request, response }) {
 
     const unit = await Unit
       .query()
@@ -58,16 +51,16 @@ class UnitController {
       .with('solicitations')
       .fetch()
 
-    return unit
+    return response.ok({
+      message: "Unidade encontrada com sucesso.",
+      data: unit
+    })
   }
 
   /**
    * Update unit details.
    * PUT or PATCH units/:id
    *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
    */
   async update ({ params, request, response }) {
 
@@ -77,23 +70,26 @@ class UnitController {
     unit.merge(data)
     await unit.save()
 
-    return unit
+    return response.ok({
+      message: "Unidade atualizada com sucesso.",
+      data: unit
+    })
   }
 
   /**
    * Delete a unit with id.
    * DELETE units/:id
    *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
    */
   async destroy ({ params, request, response }) {
 
     const unit = await Unit.find(params.id)
     await unit.delete()
 
-    return unit
+    return response.ok({
+      message: "Unidade excluída com sucesso",
+      deleted: true
+    })
   }
 }
 

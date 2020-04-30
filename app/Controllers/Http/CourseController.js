@@ -2,7 +2,6 @@
 
 /** @typedef {import('@adonisjs/framework/src/Request')} Request */
 /** @typedef {import('@adonisjs/framework/src/Response')} Response */
-/** @typedef {import('@adonisjs/framework/src/View')} View */
 
 
 const Course = use('App/Models/Course')
@@ -14,14 +13,13 @@ class CourseController {
    * Show a list of all courses.
    * GET courses
    *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   * @param {View} ctx.view
    */
-  async index ({ request, response, view }) {
+  async index ({response}) {
     const courses = await Course.all()
-    return courses;
+    return response.ok({
+      message: "All Courses.",
+      data: courses
+    })
   }
 
 
@@ -29,40 +27,36 @@ class CourseController {
    * Create/save a new course.
    * POST courses
    *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
    */
   async store ({ request, response }) {
     const data = request.only(["name", "type"])
     const course = await Course.create(data)
 
-    return course
+    return response.created({
+      message: "Curso criado com sucesso.",
+      data: course
+    })
   }
 
   /**
    * Display a single course.
    * GET courses/:id
    *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   * @param {View} ctx.view
    */
-  async show ({ params, request, response, view }) {
+  async show ({ params, response,  }) {
 
     //Fazer condição caso não tenha estudantes cadastrados
     const course = await Course.query().where('id', '=', params.id).with('students').fetch()
-    return course;
+    return response.ok({
+      message: "Curso encontrado com sucesso.",
+      data: course
+    })
   }
 
   /**
    * Update course details.
    * PUT or PATCH courses/:id
    *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
    */
   async update ({ params, request, response }) {
     const data = request.only(["name", "type"])
@@ -71,22 +65,25 @@ class CourseController {
     course.merge(data)
     await course.save()
 
-    return course
+    return response.ok({
+      message: "Curso atualizado com sucesso.",
+      data: course
+    })
   }
 
   /**
    * Delete a course with id.
    * DELETE courses/:id
    *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
    */
-  async destroy ({ params, request, response }) {
+  async destroy ({ params, response }) {
     const course = await Course.find(params.id)
     await course.delete()
 
-    return course
+    return response.ok({
+      message: "Curso deletado com sucesso.",
+      deleted: true
+    })
   }
 }
 

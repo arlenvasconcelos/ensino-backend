@@ -25,7 +25,7 @@ Route.group(()=>{
   Route.get('/api/users', 'UserController.index')
   Route.get('/api/users/:id', 'UserController.show').middleware('findUser')
   Route.post('/api/users', 'UserController.store')
-  Route.put('/api/users/:id', 'UserController.update').middleware('findUser')
+  Route.patch('/api/users/:id', 'UserController.update').middleware('findUser')
   Route.delete('/api/users/:id', 'UserController.destroy').middleware('findUser')
 })
 
@@ -57,7 +57,7 @@ Route.group(()=>{
   Route.get('/api/students', 'StudentController.index')
   Route.get('/api/students/:id', 'StudentController.show').middleware('findStudent')
   Route.post('/api/students', 'StudentController.store')
-  Route.put('/api/students/:id', 'StudentController.update').middleware('findStudent')
+  Route.patch('/api/students/:id', 'StudentController.update').middleware('findStudent')
   Route.delete('/api/students/:id', 'StudentController.destroy').middleware('findStudent')
 })
 
@@ -67,7 +67,7 @@ Route.group(()=>{
   Route.get('/api/solicitations', 'SolicitationController.index')
   Route.get('/api/solicitations/:id', 'SolicitationController.show').middleware('findSolicitation')
   Route.post('/api/solicitations', 'SolicitationController.store')
-  Route.put('/api/solicitations/:id', 'SolicitationController.update').middleware('findSolicitation')
+  Route.patch('/api/solicitations/:id', 'SolicitationController.update').middleware('findSolicitation')
   Route.delete('/api/solicitations/:id', 'SolicitationController.destroy').middleware('findSolicitation')
   Route
     .post('/api/solicitations/:id/documents', 'SolicitationController.addDocument')//add document to Solicitation
@@ -81,7 +81,7 @@ Route.group(()=>{
 Route.group(()=>{
   Route.get('/api/documents', 'DocumentController.index')
   Route.get('/api/documents/:id', 'DocumentController.show').middleware('findDocument')
-  Route.put('/api/documents/:id', 'DocumentController.update').middleware('findDocument')
+  Route.patch('/api/documents/:id', 'DocumentController.update').middleware('findDocument')
   Route.delete('/api/documents/:id', 'DocumentController.destroy').middleware('findDocument')
   Route
     .post('/api/documents/:id/attachments', 'AttachmentController.store')//Add attachment to document

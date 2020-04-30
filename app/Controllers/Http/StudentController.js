@@ -4,27 +4,36 @@ const Student = use("App/Models/Student")
 
 class StudentController {
 
-  async index () {
+  async index ({response}) {
 
     const students = await Student.all()
-    return students;
+    return response({
+      message: "Todos os alunos",
+      students
+    })
   }
 
-  async show ({params}) {
+  async show ({params, response}) {
 
     const student = await Student.query().where('id', '=', params.id).with('course').fetch()
 
-    return student
+    return response.ok({
+      message: "Aluno encontrado com sucesso",
+      data: student
+    })
   }
 
-  async store ({ request }) {
+  async store ({ request, response }) {
     const data = request.only(["name", "identify_number", "status", "phone", "email", "password", "course_id"])
     const student = await Student.create(data)
 
-    return student
+    return response.created({
+      message: "Aluno criado com sucesso",
+      data: student
+    })
   }
 
-  async update ({ params, request}) {
+  async update ({ params, request, response}) {
 
     const student = await Student.findBy('id', params.id)
     //dont get password
@@ -33,16 +42,22 @@ class StudentController {
     student.merge(data)
     await student.save();
 
-    return student
+    return response.ok({
+      message: "Aluno atualizado com sucesso.",
+      student
+    })
   }
 
-  async destroy ({ params }) {
+  async destroy ({ params, response }) {
 
     const student = await Student.findBy('id', params.id)
 
     await student.delete();
 
-    return student
+    return response.ok({
+      message: "Aluno deletado com sucesso",
+      daleted: true
+    })
   }
 }
 

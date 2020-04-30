@@ -7,10 +7,8 @@ const STATUS = {
 
 /** @typedef {import('@adonisjs/framework/src/Request')} Request */
 /** @typedef {import('@adonisjs/framework/src/Response')} Response */
-/** @typedef {import('@adonisjs/framework/src/View')} View */
 
 const Document = use('App/Models/Document')
-const Solicitation = use('App/Models/Solicitation')
 const Question = use('App/Models/Question')
 
 /**
@@ -22,26 +20,29 @@ class DocumentController {
    * GET documents
    *
    */
-  async index ({ request, response, view }) {
+  async index ({ response }) {
     const documents = await Document.all();
-    return documents;
+    return response.ok({
+      message: "Todos os documentos",
+      data: documents
+    });
   }
-
-
 
   /**
    * Display a single document.
    * GET documents/:id
    *
    */
-  async show ({ params, request, response, view }) {
+  async show ({ params, response }) {
     const document = await Document.findOrFail(params.id)
     await document.load('attachments')
     await document.load('questions')
 
-    return document
+    return response.ok({
+      message: "Documento encontrado com sucesso",
+      data: document
+    });
   }
-
 
   /**
    * Update document details.
@@ -51,7 +52,7 @@ class DocumentController {
   async update ({ params, request, response }) {
 
     const document = await Document.findOrFail(params.id)
-    const {name, questions} = await request.all()
+    const {questions} = await request.all()
 
     if (document.status === STATUS.CREATED){
       //Updating questions
@@ -82,10 +83,15 @@ class DocumentController {
       document.merge({name: name})
       await document.save()
 
-      return response.ok(document)
+      return response.ok({
+        message: "Documento atualizado com sucesso",
+        data: document
+      });
     }
 
-    return response.forbidden({message: "O documento já foi enviado e não pode ser atualizado"})
+    return response.forbidden({
+      message: "O documento não pode ser atualizado"
+    })
   }
 
   /**
@@ -98,7 +104,10 @@ class DocumentController {
 
     if (document.status === STATUS.CREATED){
       await document.delete();
-      return response.ok(document)
+      return response.ok({
+        message: "Documento deletado com sucesso",
+        deleted: true
+      })
     }
 
     return response.forbidden({message: "O documento já foi enviado e não pode ser excluído"})

@@ -2,31 +2,41 @@
 
 const User = use("App/Models/User")
 
+/** @typedef {import('@adonisjs/framework/src/Request')} Request */
+/** @typedef {import('@adonisjs/framework/src/Response')} Response */
 class UserController {
 
-  async index () {
+  async index ({response}) {
 
-    // const users = await User.query().with('unit').orderBy('name', 'asc').fetch();
     const users = await User.all()
-    return users;
+    return response.ok({
+      message: "Todos os usuários.",
+      data: users
+    })
   }
 
-  async show ({params}) {
+  async show ({params, response}) {
 
     const user = await User.query().where('id', '=', params.id).with('unit').fetch()
 
-    return user
+    return response.ok({
+      message: "Usuário encontrado com sucesso.",
+      data: user
+    })
   }
 
-  async store ({ request }) {
+  async store ({ request, reponse}) {
     const data = request.only(["name", "identify_number", "type", "phone", "email", "password", "unit_id"])
 
     const user = await User.create(data)
 
-    return user
+    return response.created({
+      message: "Usuário criado com sucesso.",
+      data: user
+    })
   }
 
-  async update ({ params, request}) {
+  async update ({ params, reponse, request}) {
 
     const user = await User.findBy('id', params.id)
     //dont get password
@@ -35,16 +45,22 @@ class UserController {
     user.merge(data)
     await user.save();
 
-    return user
+    return response.ok({
+      message: "Usuário atualizado com sucesso.",
+      data: user
+    })
   }
 
-  async destroy ({ params }) {
+  async destroy ({ params, response }) {
 
     const user = await User.findBy('id', params.id)
 
     await user.delete();
 
-    return user
+    return response.ok({
+      message: "Usuário encontrado com sucesso.",
+      deleted: true
+    })
   }
 }
 
