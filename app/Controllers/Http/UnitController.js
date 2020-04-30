@@ -31,7 +31,7 @@ class UnitController {
     const data = request.only(["name", "phone", "room"])
     const unit = await Unit.create(data)
 
-    return response.create({
+    return response.created({
       message: "Unidade criada com sucesso.",
       data: unit
     })

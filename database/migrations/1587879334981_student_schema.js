@@ -19,7 +19,7 @@ class StudentSchema extends Schema {
         .references('id')
         .inTable('courses')
         .onUpdate('CASCADE')
-        .onDelete('CASCADE')
+        .onDelete('SET NULL')
       table.timestamps()
     })
   }

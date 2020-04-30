@@ -12,11 +12,12 @@ class SolicitationSchema extends Schema {
       table.string('created_by')
       table
         .integer('student_id')
+        .notNullable()
         .unsigned()
         .references('id')
         .inTable('students')
         .onUpdate('CASCADE')
-        .onDelete('CASCADE')
+        .onDelete('SET NULL')
       table.timestamps()
     })
   }

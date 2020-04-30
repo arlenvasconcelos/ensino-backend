@@ -146,7 +146,7 @@ class SolicitationController {
     solicitation.merge({status: STATUS_SOLICITATION.SENT})
     await solicitation.save()
 
-    solicitation.load(units)
+    solicitation.load('units')
 
     return response.ok({
       message: 'Solicitação enviada com sucesso',

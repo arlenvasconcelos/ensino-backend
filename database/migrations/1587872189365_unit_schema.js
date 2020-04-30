@@ -20,14 +20,14 @@ class UnitSchema extends Schema {
         .references('id')
         .inTable('units')
         .onUpdate('CASCADE')
-        .onDelete('CASCADE')
+        .onDelete('SET NULL')
     })
   }
 
   down () {
     this.drop('units')
     this.table('users', (table) => {
-      table.dropColumn('id_unit')
+      table.dropColumn('unit_id')
     })
   }
 }
