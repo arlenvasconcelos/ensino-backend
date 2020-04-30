@@ -22,43 +22,43 @@ Route.get('/api', () => {
 
 //User
 Route.group(()=>{
-  Route.get('/api/users', 'UserController.index')
-  Route.get('/api/users/:id', 'UserController.show').middleware('findUser')
-  Route.post('/api/users', 'UserController.store')
-  Route.patch('/api/users/:id', 'UserController.update').middleware('findUser')
-  Route.delete('/api/users/:id', 'UserController.destroy').middleware('findUser')
+  Route.get('/api/users', 'UserController.index').middleware(['auth:jwt,auth:student'])
+  Route.get('/api/users/:id', 'UserController.show').middleware(['auth:jwt,auth:student','findUser'])
+  Route.post('/api/users', 'UserController.store').middleware(['auth:jwt'])
+  Route.patch('/api/users/:id', 'UserController.update').middleware(['auth:jwt','findUser'])
+  Route.delete('/api/users/:id', 'UserController.destroy').middleware(['auth:jwt','findUser'])
 })
 
-//Sessions
+//User Sessions
 Route.group(()=>{
   Route.post('/api/users/sessions', 'SessionController.store')
 })
 
 //Units
 Route.group(()=>{
-  Route.get('/api/units', 'UnitController.index')
-  Route.get('/api/units/:id', 'UnitController.show').middleware('findUnit')
-  Route.post('/api/units', 'UnitController.store')
-  Route.put('/api/units/:id', 'UnitController.update').middleware('findUnit')
-  Route.delete('/api/units/:id', 'UnitController.destroy').middleware('findUnit')
+  Route.get('/api/units', 'UnitController.index').middleware(['auth:jwt,auth:student'])
+  Route.get('/api/units/:id', 'UnitController.show').middleware(['auth:jwt,auth:student', 'findUnit'])
+  Route.post('/api/units', 'UnitController.store').middleware(['auth:jwt'])
+  Route.put('/api/units/:id', 'UnitController.update').middleware(['auth:jwt', 'findUnit'])
+  Route.delete('/api/units/:id', 'UnitController.destroy').middleware(['auth:jwt', 'findUnit'])
 })
 
 //Courses
 Route.group(()=>{
-  Route.get('/api/courses', 'CourseController.index')
-  Route.get('/api/courses/:id', 'CourseController.show').middleware('findCourse')
-  Route.post('/api/courses', 'CourseController.store')
-  Route.put('/api/courses/:id', 'CourseController.update').middleware('findCourse')
-  Route.delete('/api/courses/:id', 'CourseController.destroy').middleware('findCourse')
+  Route.get('/api/courses', 'CourseController.index').middleware(['auth:jwt,auth:student'])
+  Route.get('/api/courses/:id', 'CourseController.show').middleware(['auth:jwt,auth:student', 'findCourse'])
+  Route.post('/api/courses', 'CourseController.store').middleware(['auth:jwt'])
+  Route.put('/api/courses/:id', 'CourseController.update').middleware(['auth:jwt', 'findCourse'])
+  Route.delete('/api/courses/:id', 'CourseController.destroy').middleware(['auth:jwt', 'findCourse'])
 })
 
 //Students
 Route.group(()=>{
-  Route.get('/api/students', 'StudentController.index')
-  Route.get('/api/students/:id', 'StudentController.show').middleware('findStudent')
-  Route.post('/api/students', 'StudentController.store')
-  Route.patch('/api/students/:id', 'StudentController.update').middleware('findStudent')
-  Route.delete('/api/students/:id', 'StudentController.destroy').middleware('findStudent')
+  Route.get('/api/students', 'StudentController.index').middleware(['auth:jwt'])
+  Route.get('/api/students/:id', 'StudentController.show').middleware(['auth:jwt', 'findStudent'])
+  Route.post('/api/students', 'StudentController.store').middleware(['auth:jwt'])
+  Route.patch('/api/students/:id', 'StudentController.update').middleware(['auth:jwt', 'findStudent'])
+  Route.delete('/api/students/:id', 'StudentController.destroy').middleware(['auth:jwt', 'findStudent'])
 })
 
 //Student Sessions
@@ -68,28 +68,43 @@ Route.group(()=>{
 
 //Solicitations
 Route.group(()=>{
-  Route.get('/api/solicitations', 'SolicitationController.index')
-  Route.get('/api/solicitations/:id', 'SolicitationController.show').middleware('findSolicitation')
-  Route.post('/api/solicitations', 'SolicitationController.store').middleware(['auth:jwt,auth:student'])
-  Route.patch('/api/solicitations/:id', 'SolicitationController.update').middleware('findSolicitation')
-  Route.delete('/api/solicitations/:id', 'SolicitationController.destroy').middleware('findSolicitation')
+  Route
+    .get('/api/solicitations', 'SolicitationController.index')
+    .middleware(['auth:jwt'])
+  Route
+    .get('/api/solicitations/:id', 'SolicitationController.show')
+    .middleware(['auth:jwt,auth:student','findSolicitation'])
+  Route
+    .post('/api/solicitations', 'SolicitationController.store')
+    .middleware(['auth:jwt,auth:student'])
+  Route
+    .delete('/api/solicitations/:id', 'SolicitationController.destroy')
+    .middleware(['auth:jwt,auth:student','findSolicitation'])
   Route
     .post('/api/solicitations/:id/documents', 'SolicitationController.addDocument')//add document to Solicitation
-    .middleware('findSolicitation')
+    .middleware(['auth:jwt,auth:student','findSolicitation'])
   Route
     .post('/api/solicitations/:id/send/:unit_id', 'SolicitationController.send')//Send solicitation
-    .middleware('findSolicitation')
+    .middleware(['auth:jwt,auth:student','findSolicitation'])
 })
 
 //Documents
 Route.group(()=>{
-  Route.get('/api/documents', 'DocumentController.index')
-  Route.get('/api/documents/:id', 'DocumentController.show').middleware('findDocument')
-  Route.patch('/api/documents/:id', 'DocumentController.update').middleware('findDocument')
-  Route.delete('/api/documents/:id', 'DocumentController.destroy').middleware('findDocument')
+  Route
+    .get('/api/documents', 'DocumentController.index')
+    .middleware(['auth:jwt'])
+  Route
+    .get('/api/documents/:id', 'DocumentController.show')
+    .middleware(['auth:jwt,auth:student','findDocument'])
+  Route
+    .patch('/api/documents/:id', 'DocumentController.update')
+    .middleware(['auth:jwt,auth:student','findDocument'])
+  Route
+    .delete('/api/documents/:id', 'DocumentController.destroy')
+    .middleware(['auth:jwt,auth:student','findDocument'])
   Route
     .post('/api/documents/:id/attachments', 'AttachmentController.store')//Add attachment to document
-    .middleware('findDocument')
+    .middleware(['auth:jwt,auth:student','findDocument'])
 })
 
 //Attachments

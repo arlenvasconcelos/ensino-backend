@@ -70,26 +70,26 @@ class SolicitationController {
 
   }
 
-  /**
-   * Update solicitation details.
-   * PUT or PATCH solicitations/:id
-   *
-   */
-  async update ({ params, request, response }) {
-    const data = request.only(['type'])
-    const solicitation = await Solicitation.findOrFail(params.id)
+  // /**
+  //  * Update solicitation details.
+  //  * PUT or PATCH solicitations/:id
+  //  *
+  //  */
+  // async update ({ params, request, response }) {
+  //   const data = request.only(['type'])
+  //   const solicitation = await Solicitation.findOrFail(params.id)
 
-    if (solicitation.status === STATUS_SOLICITATION.CREATED){
-      solicitation.merge(data)
-      await solicitation.save()
-      return response.ok({
-        message: "Solicitação atualizada com sucesso",
-        data: solicitation
-      })
-    }
+  //   if (solicitation.status === STATUS_SOLICITATION.CREATED){
+  //     solicitation.merge(data)
+  //     await solicitation.save()
+  //     return response.ok({
+  //       message: "Solicitação atualizada com sucesso",
+  //       data: solicitation
+  //     })
+  //   }
 
-    return response.badRequest({message: "Solicitação não pode ser editada"})
-  }
+  //   return response.badRequest({message: "Solicitação não pode ser editada"})
+  // }
 
   /**
    * Delete a solicitation with id.
