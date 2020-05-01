@@ -117,13 +117,19 @@ class SolicitationController {
     return response.badRequest({message: "Solicitação não pode ser excluída"})
   }
 
-  async addDocument({params, request, response}){
+  async addDocument({params, request, response, auth}){
     const solicitation = await Solicitation.findOrFail(params.id)
-    const data = await request.only(['name','type','created_by'])//Pegar posteriormente o created_by pelo auth
+    const data = await request.only(['name','type'])
     const {questions} = await request.only(['questions']);
     //Verifying if there are questions on Document
     if (questions.length){
-      const document = await solicitation.documents().create({...data, status: STATUS_DOC.CREATED})
+      const document = await solicitation
+        .documents()
+        .create({
+          ...data,
+          status: STATUS_DOC.CREATED,
+          created_by: `${auth.user.name} - ${auth.user.identify_number}`
+        })
       document.questions().createMany(questions)
       return response.created({
         message: "Documento criado com sucesso",
@@ -135,7 +141,7 @@ class SolicitationController {
   }
 
 
-  async send ({params, request, response}){
+  async send ({params, response, auth}){
     const solicitation = await Solicitation.findOrFail(params.id)
     const unit = await Unit.findOrFail(params.unit_id)
 
@@ -152,7 +158,10 @@ class SolicitationController {
 
     await solicitation.units().attach(params.unit_id);
 
-    solicitation.merge({status: STATUS_SOLICITATION.SENT})
+    solicitation.merge({
+      status: STATUS_SOLICITATION.SENT,
+      created_by: `${auth.user.name} - ${auth.user.identify_number}`
+    })
     await solicitation.save()
 
     solicitation.load('units')
