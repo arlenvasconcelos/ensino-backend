@@ -76,7 +76,7 @@ Route.group(()=>{
     .middleware(['auth:jwt,auth:student','findSolicitation'])
   Route
     .post('/api/solicitations', 'SolicitationController.store')
-    .middleware(['auth:jwt,auth:student', 'studentCustom'])
+    .middleware(['auth:jwt,auth:student'])
   Route
     .delete('/api/solicitations/:id', 'SolicitationController.destroy')
     .middleware(['auth:jwt,auth:student','findSolicitation'])

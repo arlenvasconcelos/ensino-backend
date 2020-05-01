@@ -16,6 +16,7 @@ const STATUS_SOLICITATION = {
 
 const Solicitation = use('App/Models/Solicitation')
 const Unit = use('App/Models/Unit')
+const Student = use('App/Models/Student')
 /**
  * Resourceful controller for interacting with solicitations
  */
@@ -41,9 +42,16 @@ class SolicitationController {
    *
    */
   async store ({ request, response, auth }) {
-    const data = request.only(['type', 'created_by'])
-    console.log(auth.user.id)
-    const solicitation = await Solicitation.create({...data, student_id: auth.user.id , status: STATUS_SOLICITATION.CREATED})
+    const { type, student_id } = request.all(['type'])
+
+    //Student_id will use only, if solicitation have created by user
+    const solicitation = await Solicitation
+      .create({
+        type,
+        student_id: (auth.user instanceof Student) ? auth.user.id : student_id,
+        status: STATUS_SOLICITATION.CREATED,
+        created_by: `${auth.user.name} - ${auth.user.identify_number}`
+      })
 
     return response.created({
       message: "Solicitação criada com sucesso.",
