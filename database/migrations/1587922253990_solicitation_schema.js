@@ -17,7 +17,6 @@ class SolicitationSchema extends Schema {
         .references('id')
         .inTable('students')
         .onUpdate('CASCADE')
-        .onDelete('SET NULL')
       table.timestamps()
     })
   }

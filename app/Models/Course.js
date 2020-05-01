@@ -6,7 +6,7 @@ const Model = use('Model')
 class Course extends Model {
 
   students () {
-    return this.hasMany('App/Models/Students')
+    return this.hasMany('App/Models/Student')
   }
 }
 

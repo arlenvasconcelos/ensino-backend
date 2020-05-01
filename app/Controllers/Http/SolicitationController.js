@@ -40,9 +40,9 @@ class SolicitationController {
    * POST solicitations
    *
    */
-  async store ({ request, response }) {
-    const data = request.only(['type', 'student_id', 'created_by'])
-    const solicitation = await Solicitation.create({...data, status: STATUS_SOLICITATION.CREATED})
+  async store ({ request, response, auth }) {
+    const data = request.only(['type', 'created_by'])
+    const solicitation = await Solicitation.create({...data, student_id: auth.id , status: STATUS_SOLICITATION.CREATED})
 
     return response.created({
       message: "Solicitação criada com sucesso.",

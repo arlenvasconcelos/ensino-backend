@@ -12,10 +12,47 @@
 */
 
 /** @type {import('@adonisjs/lucid/src/Factory')} */
-// const Factory = use('Factory')
+const Factory = use('Factory');
+const Hash = use('Hash');
 
-// Factory.blueprint('App/Models/User', (faker) => {
-//   return {
-//     username: faker.username()
-//   }
-// })
+const COURSES = [{name: 'ADS', type: 'Superior'}, {name: 'EI', type: 'Superior'}, {name: 'Informática', type: 'Técnico'}]
+
+Factory.blueprint('App/Models/Unit', (faker) => {
+  return {
+    name: faker.name(),
+    room: faker.integer({ min: 101, max:519  }),
+    phone: faker.phone({ country: "br" })
+  }
+})
+
+// Post blueprint
+Factory.blueprint('App/Models/User', async (faker) => {
+  return {
+    name: faker.name(),
+    identify_number: faker.integer({min: 100000, max: 999999}),
+    type: 'user',
+    email: faker.email(),
+    phone: faker.phone({ country: "br" }),
+    password: '123456'
+  }
+})
+
+Factory.blueprint('App/Models/Course', (faker, i) => {
+  return {
+    name: COURSES[i%3].name,
+    type: COURSES[i%3].type,
+  }
+})
+
+
+Factory.blueprint('App/Models/Student', async (faker, i) => {
+  return {
+    name: faker.name(),
+    identify_number: faker.integer({min: 100000, max: 999999}),
+    status: 'active',
+    email: faker.email(),
+    phone: faker.phone({ country: "br" }),
+    password: '123456'
+  }
+})
+

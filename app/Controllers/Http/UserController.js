@@ -25,10 +25,10 @@ class UserController {
     })
   }
 
-  async store ({ request, reponse}) {
+  async store ({ request, response}) {
     const data = request.only(["name", "identify_number", "type", "phone", "email", "password", "unit_id"])
 
-    const user = await User.create(data)
+    const user = await User.create({...data, type: "user",})
 
     return response.created({
       message: "Usuário criado com sucesso.",
