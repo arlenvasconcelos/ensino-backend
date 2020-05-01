@@ -9,7 +9,7 @@ class FindStudent {
 
     if (!student){
       return response.notFound({
-        message: 'Student not found.',
+        message: 'Estudante não encontrado..',
         id
       })
     }

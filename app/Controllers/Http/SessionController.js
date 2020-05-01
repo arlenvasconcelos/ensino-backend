@@ -6,11 +6,7 @@ class SessionController {
 
     const token = await auth.attempt(identify_number, password)
 
-    return response.ok({
-      message: "Login realizado com sucesso",
-      token,
-      logged: true
-    })
+    return response.ok(token)
   }
 }
 

@@ -9,7 +9,7 @@ class FindCourse {
     const course = await Course.find(id)
     if (!course){
       return response.notFound({
-        message: "Course not found.",
+        message: "Curso não encontrado.",
         id
       })
     }

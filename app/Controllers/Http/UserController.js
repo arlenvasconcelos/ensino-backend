@@ -26,7 +26,7 @@ class UserController {
   }
 
   async store ({ request, response}) {
-    const data = request.only(["name", "identify_number", "type", "phone", "email", "password", "unit_id"])
+    const data = request.only(["name", "identify_number", "phone", "email", "password", "unit_id"])
 
     const user = await User.create({...data, type: "user",})
 
@@ -40,7 +40,7 @@ class UserController {
 
     const user = await User.findBy('id', params.id)
     //dont get password
-    const data = request.only(["name", "identify_number", "type", "phone", "email", "unit_id"])
+    const data = request.only(["name", "identify_number", "phone", "email", "unit_id"])
 
     user.merge(data)
     await user.save();

@@ -9,7 +9,7 @@ class FindDocument {
     const document = await Document.find(id)
     if (!document){
       return response.notFound({
-        message: "Document not found.",
+        message: "Documento não encontrado.",
         id
       })
     }

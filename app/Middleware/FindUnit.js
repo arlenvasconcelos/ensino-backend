@@ -9,7 +9,7 @@ class FindUnit {
     const unit = await Unit.find(id)
     if (!unit){
       return response.notFound({
-        message: "Unit not found.",
+        message: "Unidade não encontrada.",
         id
       })
     }

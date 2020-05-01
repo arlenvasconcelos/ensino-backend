@@ -9,7 +9,7 @@ class FindUser {
     const user = await User.find(id)
     if (!user){
       return response.notFound({
-        message: "User not found.",
+        message: "Usuario não encontrado.",
         id
       })
     }

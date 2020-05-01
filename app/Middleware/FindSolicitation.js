@@ -9,7 +9,7 @@ class FindSolicitation {
 
     if (!solicitation) {
       return response.notFound({
-        message: 'Solicitation not found.',
+        message: 'Solicitação não encontrada.',
         id
       })
     }

@@ -14,11 +14,10 @@ class AdminCustom {
       await next();
     }
     else {
-      response.forbidden({
-        message: "Usuário não é admin."
+      return response.forbidden({
+        message: "Usuário não é admin"
       })
     }
-    await next()
   }
 }
 
