@@ -44,6 +44,7 @@ const namedMiddleware = {
   findCourse: 'App/Middleware/FindCourse',
   findStudent: 'App/Middleware/FindStudent',
   adminCustom: 'App/Middleware/AdminCustom',
+  studentCustom: 'App/Middleware/StudentCustom',
 }
 
 /*

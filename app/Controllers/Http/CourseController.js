@@ -17,7 +17,7 @@ class CourseController {
   async index ({response}) {
     const courses = await Course.all()
     return response.ok({
-      message: "All Courses.",
+      message: "Cursos encontrados com sucesso.",
       data: courses
     })
   }
@@ -81,7 +81,7 @@ class CourseController {
     await course.delete()
 
     return response.ok({
-      message: "Curso deletado com sucesso.",
+      message: "Curso excluído com sucesso.",
       deleted: true
     })
   }

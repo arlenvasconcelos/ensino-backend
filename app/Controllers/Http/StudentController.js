@@ -7,8 +7,8 @@ class StudentController {
   async index ({response}) {
 
     const students = await Student.all()
-    return response({
-      message: "Todos os alunos",
+    return response.ok({
+      message: "Alunos encontrados com sucesso.",
       students
     })
   }
@@ -55,7 +55,7 @@ class StudentController {
     await student.delete();
 
     return response.ok({
-      message: "Aluno deletado com sucesso",
+      message: "Aluno excluído com sucesso",
       daleted: true
     })
   }

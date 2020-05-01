@@ -105,7 +105,7 @@ class DocumentController {
     if (document.status === STATUS.CREATED){
       await document.delete();
       return response.ok({
-        message: "Documento deletado com sucesso",
+        message: "Documento excluído com sucesso",
         deleted: true
       })
     }
