@@ -38,6 +38,10 @@ class User extends Model {
   unit () {
     return this.belongsTo('App/Models/Unit')
   }
+
+  static get hidden () {
+    return ['password']
+  }
 }
 
 module.exports = User

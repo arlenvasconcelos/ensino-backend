@@ -2,6 +2,7 @@
 /** @typedef {import('@adonisjs/framework/src/Request')} Request */
 /** @typedef {import('@adonisjs/framework/src/Response')} Response */
 
+const Student = use('App/Models/Student')
 class StudentCustom {
   /**
    * @param {object} ctx
@@ -10,7 +11,8 @@ class StudentCustom {
    */
   async handle ({ auth, response }, next) {
     // call next to advance the request
-    if (auth.student){
+
+    if (auth.user instanceof Student){
       await next();
     }
     else {

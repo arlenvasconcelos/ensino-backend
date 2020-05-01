@@ -33,6 +33,10 @@ class Student extends Model {
   solicitations () {
     return this.hasMany('App/Models/Solicitation')
   }
+
+  static get hidden () {
+    return ['password']
+  }
 }
 
 module.exports = Student
