@@ -25,8 +25,8 @@ Route.group(()=>{
   Route.get('/api/users', 'UserController.index').middleware(['auth:jwt,auth:student'])
   Route.get('/api/users/:id', 'UserController.show').middleware(['auth:jwt,auth:student','findUser'])
   Route.post('/api/users', 'UserController.store').middleware(['auth:jwt,auth:student', 'adminCustom'])
-  Route.patch('/api/users/:id', 'UserController.update').middleware(['auth:jwt,auth:student','findUser', 'adminCustom'])
-  Route.delete('/api/users/:id', 'UserController.destroy').middleware(['auth:jwt,auth:student','findUser', 'adminCustom'])
+  Route.patch('/api/users/:id', 'UserController.update').middleware(['auth:jwt,auth:student', 'adminCustom', 'findUser', ])
+  Route.delete('/api/users/:id', 'UserController.destroy').middleware(['auth:jwt,auth:student', 'adminCustom', 'findUser', ])
 })
 
 //User Sessions
@@ -39,8 +39,8 @@ Route.group(()=>{
   Route.get('/api/units', 'UnitController.index').middleware(['auth:jwt,auth:student'])
   Route.get('/api/units/:id', 'UnitController.show').middleware(['auth:jwt,auth:student', 'findUnit'])
   Route.post('/api/units', 'UnitController.store').middleware(['auth:jwt,auth:student', 'adminCustom'])
-  Route.put('/api/units/:id', 'UnitController.update').middleware(['auth:jwt,auth:student', 'findUnit','adminCustom'])
-  Route.delete('/api/units/:id', 'UnitController.destroy').middleware(['auth:jwt,auth:student', 'findUnit', 'adminCustom'])
+  Route.put('/api/units/:id', 'UnitController.update').middleware(['auth:jwt,auth:student', 'adminCustom', 'findUnit'])
+  Route.delete('/api/units/:id', 'UnitController.destroy').middleware(['auth:jwt,auth:student', 'adminCustom', 'findUnit'])
 })
 
 //Courses
@@ -48,8 +48,8 @@ Route.group(()=>{
   Route.get('/api/courses', 'CourseController.index').middleware(['auth:jwt,auth:student'])
   Route.get('/api/courses/:id', 'CourseController.show').middleware(['auth:jwt,auth:student', 'findCourse'])
   Route.post('/api/courses', 'CourseController.store').middleware(['auth:jwt,auth:student', 'adminCustom'])
-  Route.put('/api/courses/:id', 'CourseController.update').middleware(['auth:jwt,auth:student', 'findCourse', 'adminCustom'])
-  Route.delete('/api/courses/:id', 'CourseController.destroy').middleware(['auth:jwt,auth:student', 'findCourse', 'adminCustom' ])
+  Route.put('/api/courses/:id', 'CourseController.update').middleware(['auth:jwt,auth:student', 'adminCustom', 'findCourse'])
+  Route.delete('/api/courses/:id', 'CourseController.destroy').middleware(['auth:jwt,auth:student', 'adminCustom', 'findCourse'])
 })
 
 //Students
@@ -57,8 +57,8 @@ Route.group(()=>{
   Route.get('/api/students', 'StudentController.index').middleware(['auth:jwt,auth:student'])
   Route.get('/api/students/:id', 'StudentController.show').middleware(['auth:jwt,auth:student', 'findStudent'])
   Route.post('/api/students', 'StudentController.store').middleware(['auth:jwt,auth:student', 'adminCustom'])
-  Route.patch('/api/students/:id', 'StudentController.update').middleware(['auth:jwt,auth:student', 'findStudent', 'adminCustom'])
-  Route.delete('/api/students/:id', 'StudentController.destroy').middleware(['auth:jwt,auth:student', 'findStudent', 'adminCustom'])
+  Route.patch('/api/students/:id', 'StudentController.update').middleware(['auth:jwt,auth:student', 'adminCustom', 'findStudent'])
+  Route.delete('/api/students/:id', 'StudentController.destroy').middleware(['auth:jwt,auth:student', 'adminCustom', 'findStudent'])
 })
 
 //Student Sessions
