@@ -12,19 +12,29 @@
 
 /** @type {import('@adonisjs/lucid/src/Factory')} */
 const Factory = use('Factory')
+const Database = use('Database')
 const User = use('App/Models/User')
 
 class IntialSeeder {
   async run () {
-    // const course = await Factory.model('App/Models/Course').create()
-    // const student = await Factory.model('App/Models/Student').make()
+    // await Database.table('user_types').insert({
+    //   type: 'Admin'
+    // })
+    // await Database.table('user_types').insert({
+    //   type: 'Servidor'
+    // })
+    // await Database.table('user_types').insert({
+    //   type: 'Aluno'
+    // })
 
-    // await course.students().save(student)
     await User.create({
       username: 'admin',
       password: '123456',
       status: 'ativo',
-      type: 'admin'
+      name:'Admin',
+      type:'Admin',
+      identify_number:'000000',
+      email:'admin@admin.com',
     })
   }
 }

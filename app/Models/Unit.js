@@ -5,8 +5,8 @@ const Model = use('Model')
 
 class Unit extends Model {
 
-  employees () {
-    return this.hasMany('App/Models/Employee')
+  users () {
+    return this.hasMany('App/Models/User')
   }
 
   solicitations () {

@@ -5,14 +5,10 @@ const Schema = use('Schema')
 
 class StudentSchema extends Schema {
   up () {
-    this.create('students', (table) => {
-      table.increments()
-      table.string('name', 254).notNullable()
-      table.string('identify_number', 254).notNullable().unique()
-      table.string('email', 254).notNullable().unique()
-      table.string('phone', 254)
+    this.create('course_user', (table) => {
       table
         .integer('user_id')
+        .primary()
         .notNullable()
         .unsigned()
         .references('id')
@@ -29,7 +25,7 @@ class StudentSchema extends Schema {
   }
 
   down () {
-    this.drop('students')
+    // this.drop('course_user')
   }
 }
 

@@ -20,19 +20,20 @@ Route.get('/api', () => {
   return { greeting: 'API is working' }
 })
 
-//User
+//Authentication
 Route.group(()=>{
-  Route.get('/api/employees', 'EmployeeController.index').middleware(['auth'])
-  Route.get('/api/employees/:id', 'EmployeeController.show').middleware(['auth','findEmployee'])
-  Route.post('/api/employees', 'EmployeeController.store').middleware(['auth', 'adminCustom'])
-  Route.patch('/api/employees/:id', 'EmployeeController.update').middleware(['auth', 'adminCustom', 'findEmployee', ])
-  Route.delete('/api/employees/:id', 'EmployeeController.destroy').middleware(['auth', 'adminCustom', 'findEmployee', ])
+  Route.post('/api/auth', 'SessionController.store')
 })
 
-//User Sessions
+//User
 Route.group(()=>{
-  Route.post('/api/users/sessions', 'SessionController.store')
+  Route.get('/api/users', 'UserController.index').middleware(['auth'])
+  Route.get('/api/users/:id', 'UserController.show').middleware(['auth','findUser'])
+  Route.post('/api/users', 'UserController.store').middleware(['auth', 'adminCustom'])
+  Route.patch('/api/users/:id', 'UserController.update').middleware(['auth', 'adminCustom', 'findUser', ])
+  Route.delete('/api/users/:id', 'EmployeeController.destroy').middleware(['auth', 'adminCustom', 'findEmployee', ])
 })
+
 
 //Units
 Route.group(()=>{
@@ -61,16 +62,11 @@ Route.group(()=>{
   Route.delete('/api/students/:id', 'StudentController.destroy').middleware(['auth', 'adminCustom', 'findStudent'])
 })
 
-//Student Sessions
-Route.group(()=>{
-  Route.post('/api/students/sessions', 'StudentSessionController.store')
-})
-
 //Solicitations
 Route.group(()=>{
   Route
     .get('/api/solicitations', 'SolicitationController.index')
-    .middleware(['auth', 'adminCustom'])
+    .middleware(['auth'])
   Route
     .get('/api/solicitations/:id', 'SolicitationController.show')
     .middleware(['auth','findSolicitation'])

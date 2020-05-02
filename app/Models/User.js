@@ -35,12 +35,8 @@ class User extends Model {
     return this.hasMany('App/Models/Token')
   }
 
-  employee () {
-    this.hasOne('App/Models/Employee')
-  }
-
-  student () {
-    this.hasOne('App/Models/Student')
+  unit () {
+    return this.belongsTo('App/Models/Unit')
   }
 
   static get hidden () {
