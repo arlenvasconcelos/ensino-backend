@@ -24,7 +24,7 @@ class EmployeeController {
     employee.unit_id ? await employee.load('unit') : null
 
     return response.ok({
-      message: "Usuário encontrado com sucesso.",
+      message: "Servidor encontrado com sucesso.",
       data: employee
     })
   }
@@ -49,7 +49,7 @@ class EmployeeController {
         user_id: newUser.id
       })
       return response.created({
-        message: "Usuário criado com sucesso.",
+        message: "Servidor criado com sucesso.",
         data:employee
       })
     } catch (err) {
@@ -62,24 +62,17 @@ class EmployeeController {
   async update ({ params, response, request}) {
 
     const employee = await Employee.findOrFail(params.id)
-    //dont get password
-    const {username, type, ...data} = request.only(["name", "identify_number", "phone", "email", "unit_id", "username", "type"])
+    const {type, ...data} = request.only(["name", "identify_number", "phone", "email", "unit_id"])
 
     //Test request body
-    const message = await this.verifyData(data, username)
+    const message = await this.verifyData(data)
     if (message) return response.badRequest(message)
-
-    if (username || type){
-      const user = await User.findOrFail(employee.user_id)
-      user.merge({username, type})
-      await user.save();
-    }
 
     employee.merge(data)
     await employee.save();
 
     return response.ok({
-      message: "Usuário atualizado com sucesso.",
+      message: "Servidor atualizado com sucesso.",
       data: employee
     })
   }
@@ -87,29 +80,29 @@ class EmployeeController {
   async destroy ({ params, response }) {
 
     const employee = await Employee.findBy('id', params.id)
+    const user = await User.findOrFail(employee.user_id)
 
     await employee.delete();
+    await user.delete();
 
     return response.ok({
-      message: "Usuário excluído com sucesso.",
+      message: "Servidor excluído com sucesso.",
       deleted: true
     })
   }
 
-  async verifyData (data, username){
+  async verifyData (data, username = null){
 
-    if (
-      data.identify_number
-      && await Employee.query().where('identify_number', data.identify_number).first()
-    ){
-      return  {message: 'Matricula já cadastrada.'}
+    if (data.identify_number
+      && await Employee.query().where('identify_number', data.identify_number).first()){
+
+        return  {message: 'Matricula já cadastrada.'}
     }
 
-    if (
-      data.email
-      && await Employee.query().where('email', data.email).first()
-    ){
-      return {message: 'Email já cadastrado.'}
+    if (data.email
+      && await Employee.query().where('email', data.email).first()){
+
+        return {message: 'Email já cadastrado.'}
     }
 
     //Test if unit already exists

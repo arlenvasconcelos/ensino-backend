@@ -39,6 +39,10 @@ class User extends Model {
     this.hasOne('App/Models/Employee')
   }
 
+  student () {
+    this.hasOne('App/Models/Student')
+  }
+
   static get hidden () {
     return ['password']
   }

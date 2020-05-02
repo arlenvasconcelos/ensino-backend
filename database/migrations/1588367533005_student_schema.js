@@ -12,6 +12,13 @@ class StudentSchema extends Schema {
       table.string('email', 254).notNullable().unique()
       table.string('phone', 254)
       table
+        .integer('user_id')
+        .notNullable()
+        .unsigned()
+        .references('id')
+        .inTable('users')
+        .onDelete('CASCADE')
+      table
         .integer('course_id')
         .unsigned()
         .references('id')

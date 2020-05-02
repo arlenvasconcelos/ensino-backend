@@ -26,6 +26,10 @@ class Student extends Model {
     return this.belongsTo('App/Models/Course')
   }
 
+  user () {
+    return this.belongsTo('App/Models/User')
+  }
+
   static get hidden () {
     return ['password']
   }
