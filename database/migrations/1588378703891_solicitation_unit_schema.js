@@ -5,7 +5,7 @@ const Schema = use('Schema')
 
 class SolicitationUnitSchema extends Schema {
   up () {
-    this.create('solicitation_units', (table) => {
+    this.create('solicitation_unit', (table) => {
       table
         .integer('unit_id')
         .notNullable()
@@ -22,7 +22,6 @@ class SolicitationUnitSchema extends Schema {
         .onDelete('CASCADE')
       table
         .integer('user_id')
-        .notNullable()
         .unsigned()
         .references('id')
         .inTable('users')
@@ -33,7 +32,7 @@ class SolicitationUnitSchema extends Schema {
   }
 
   down () {
-    this.drop('solicitation_units')
+    this.drop('solicitation_unit')
   }
 }
 

@@ -7,8 +7,8 @@ class EmployeeSchema extends Schema {
   up () {
     this.create('employees', (table) => {
       table.increments()
-      table.string('identify_number', 254).notNullable().unique()
-      table.string('status', 60).notNullable()
+      table.string('name', 254).notNullable()
+      table.string('identify_number', 60).notNullable().unique()
       table.string('type', 60).notNullable()
       table.string('email', 254).notNullable().unique()
       table.string('phone', 254)
@@ -19,13 +19,12 @@ class EmployeeSchema extends Schema {
         .inTable('units')
         .onDelete('SET NULL')
       table
-        .string('user_id')
+        .integer('user_id')
         .notNullable()
         .unsigned()
         .references('id')
         .inTable('users')
         .onDelete('CASCADE')
-
       table.timestamps()
     })
   }

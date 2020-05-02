@@ -10,9 +10,9 @@ class DocumentSchema extends Schema {
       table.string('name').notNullable()
       table.string('type').notNullable()
       table.string('status').notNullable()
-      table.string('user_id')
+      table
+        .integer('user_id')
         .unsigned()
-        .notNullable()
         .references('id')
         .inTable('users')
         .onDelete('SET NULL')

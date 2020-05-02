@@ -9,10 +9,15 @@ class SolicitationSchema extends Schema {
       table.increments()
       table.string('type').notNullable()
       table.string('status').notNullable()
-      table.string('interested').notNullable()
-      table.string('user_id')
+      table
+        .integer('interested_id')
         .unsigned()
-        .notNullable()
+        .references('id')
+        .inTable('users')
+        .onDelete('SET NULL')
+      table
+        .integer('created_by_id')
+        .unsigned()
         .references('id')
         .inTable('users')
         .onDelete('SET NULL')
