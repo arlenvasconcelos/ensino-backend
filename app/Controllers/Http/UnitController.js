@@ -47,7 +47,7 @@ class UnitController {
     const unit = await Unit
       .query()
       .where('id', '=', params.id)
-      .with('users')
+      .with('employees')
       .with('solicitations')
       .fetch()
 

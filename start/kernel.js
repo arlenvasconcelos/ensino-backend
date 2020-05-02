@@ -39,7 +39,7 @@ const namedMiddleware = {
   guest: 'Adonis/Middleware/AllowGuestOnly',
   findSolicitation: 'App/Middleware/FindSolicitation',
   findUnit: 'App/Middleware/FindUnit',
-  findUser: 'App/Middleware/FindUser',
+  findEmployee: 'App/Middleware/FindEmployee',
   findDocument: 'App/Middleware/FindDocument',
   findCourse: 'App/Middleware/FindCourse',
   findStudent: 'App/Middleware/FindStudent',

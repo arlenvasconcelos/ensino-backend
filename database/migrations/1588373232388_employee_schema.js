@@ -9,7 +9,6 @@ class EmployeeSchema extends Schema {
       table.increments()
       table.string('name', 254).notNullable()
       table.string('identify_number', 60).notNullable().unique()
-      table.string('type', 60).notNullable()
       table.string('email', 254).notNullable().unique()
       table.string('phone', 254)
       table
