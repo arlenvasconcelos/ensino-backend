@@ -2,9 +2,9 @@
 
 class SessionController {
   async store ({ request, response, auth }) {
-    const { identify_number, password } = request.all()
+    const { username, password } = request.all()
 
-    const token = await auth.attempt(identify_number, password)
+    const token = await auth.attempt(username, password)
 
     return response.ok(token)
   }

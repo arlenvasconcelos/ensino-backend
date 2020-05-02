@@ -69,24 +69,12 @@ module.exports = {
       serializer: 'lucid',
       model: 'App/Models/User',
       scheme: 'jwt',
-      uid: 'identify_number',
+      uid: 'username',
       password: 'password',
       options: {
         secret: Env.get('APP_KEY')
       }
     },
-    student: {
-      serializer: 'lucid',
-      model: 'App/Models/Student',
-      scheme: 'jwt',
-      uid: 'identify_number',
-      password: 'password',
-      options: {
-        secret: Env.get('APP_KEY')
-      }
-    },
-  // },
-
   /*
   |--------------------------------------------------------------------------
   | Api

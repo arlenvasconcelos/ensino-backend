@@ -10,14 +10,12 @@ class AdminCustom {
    */
   async handle ({ auth, response }, next) {
     // call next to advance the request
-    if (auth.user.type === 'admin'){
-      await next();
-    }
-    else {
+    if (!(auth.user.type === 'admin')){
       return response.forbidden({
-        message: "Usuário não é admin"
+        message: "Usuário não é admin."
       })
     }
+    await next();
   }
 }
 

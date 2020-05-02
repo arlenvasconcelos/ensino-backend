@@ -22,16 +22,8 @@ class Student extends Model {
     })
   }
 
-  tokens () {
-    return this.hasMany('App/Models/StudentToken')
-  }
-
   course () {
     return this.belongsTo('App/Models/Course')
-  }
-
-  solicitations () {
-    return this.hasMany('App/Models/Solicitation')
   }
 
   static get hidden () {
