@@ -7,16 +7,15 @@ class SolicitationSchema extends Schema {
   up () {
     this.create('solicitations', (table) => {
       table.increments()
-      table.string('type')
-      table.string('status')
-      table.string('created_by')
-      table
-        .integer('student_id')
-        .notNullable()
+      table.string('type').notNullable()
+      table.string('status').notNullable()
+      table.string('interested').notNullable()
+      table.string('user_id')
         .unsigned()
+        .notNullable()
         .references('id')
-        .inTable('students')
-        .onUpdate('CASCADE')
+        .inTable('users')
+        .onDelete('SET NULL')
       table.timestamps()
     })
   }

@@ -7,14 +7,14 @@ class AttachmentSchema extends Schema {
   up () {
     this.create('attachments', (table) => {
       table.increments()
+      table.string('path').notNullable()
       table
         .integer('document_id')
         .unsigned()
+        .notNullable()
         .references('id')
         .inTable('documents')
-        .onUpdate('CASCADE')
         .onDelete('CASCADE')
-      table.string('path').notNullable()
       table.timestamps()
     })
   }

@@ -12,23 +12,10 @@ class UnitSchema extends Schema {
       table.string('room')
       table.timestamps()
     })
-
-    this.alter('users', (table) => {
-      table
-        .integer('unit_id')
-        .unsigned()
-        .references('id')
-        .inTable('units')
-        .onUpdate('CASCADE')
-        .onDelete('SET NULL')
-    })
   }
 
   down () {
     this.drop('units')
-    this.table('users', (table) => {
-      table.dropColumn('unit_id')
-    })
   }
 }
 

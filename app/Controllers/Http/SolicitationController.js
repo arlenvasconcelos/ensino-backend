@@ -26,8 +26,10 @@ class SolicitationController {
    * GET solicitations
    *
    */
-  async index ({ response }) {
+  async index ({ response, auth }) {
     const solicitations = await Solicitation.all()
+
+    // if (auth.user.identify_number)
 
     return response.ok({
       message: "Todas as solicitações",
@@ -50,7 +52,7 @@ class SolicitationController {
         type,
         student_id: (auth.user instanceof Student) ? auth.user.id : student_id,
         status: STATUS_SOLICITATION.CREATED,
-        created_by: `${auth.user.name} - ${auth.user.identify_number}`
+        created_by: auth.user.identify_number
       })
 
     return response.created({
@@ -128,7 +130,7 @@ class SolicitationController {
         .create({
           ...data,
           status: STATUS_DOC.CREATED,
-          created_by: `${auth.user.name} - ${auth.user.identify_number}`
+          created_by: auth.user.identify_number
         })
       document.questions().createMany(questions)
       return response.created({
@@ -160,7 +162,7 @@ class SolicitationController {
 
     solicitation.merge({
       status: STATUS_SOLICITATION.SENT,
-      created_by: `${auth.user.name} - ${auth.user.identify_number}`
+      created_by: auth.user.identify_number
     })
     await solicitation.save()
 
