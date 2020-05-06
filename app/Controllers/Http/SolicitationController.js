@@ -14,10 +14,9 @@ const STATUS_SOLICITATION = {
 /** @typedef {import('@adonisjs/framework/src/Request')} Request */
 /** @typedef {import('@adonisjs/framework/src/Response')} Response */
 
+const SolicitationUnit = use('App/Models/SolicitationUnit')
 const Solicitation = use('App/Models/Solicitation')
 const Unit = use('App/Models/Unit')
-const Student = use('App/Models/Student')
-const Employee = use('App/Models/Employee')
 /**
  * Resourceful controller for interacting with solicitations
  */
@@ -29,7 +28,7 @@ class SolicitationController {
    */
   async index ({ response, auth }) {
 
-    if (auth.user.type === 'admin'){
+    if (auth.user.type === 'Admin'){
       const solicitations = await Solicitation.all()
       return response.ok({
         message: "Todas as solicitações",
@@ -37,7 +36,6 @@ class SolicitationController {
       })
     }
     else if (auth.user.type === 'Aluno'){
-      console.log(auth.user.id)
       const solicitations = await Solicitation
         .query()
         .where('interested_id', auth.user.id)
@@ -49,11 +47,25 @@ class SolicitationController {
       })
     }
     else if (auth.user.type === 'Servidor'){
+      const solicitations = await SolicitationUnit
+        .query()
+        .where('unit_id', auth.user.unit_id)
+        .with('solicitations')
+        .fetch()
 
-      return
+      const solicitations_owner = await Solicitation
+        .query()
+        .where('created_by_id', auth.user.id)
+        .fetch()
 
-      console.log(employee.unit_id, employee.name)
-      return {ok: 'ok'}
+      console.log()
+      return response.ok({
+        message: "",
+        data: {
+          solicitations_created: solicitations_owner,
+          solicitations_onUnit: solicitations
+        }
+      })
     }
 
     return response.badRequest({
@@ -91,14 +103,18 @@ class SolicitationController {
    * GET solicitations/:id
    *
    */
-  async show ({ params, response }) {
+  async show ({ params, response, auth}) {
 
-      const solicitation = await Solicitation
-        .query()
-        .where('id', '=', params.id)
-        .with('student')
-        .with('documents')
-        .fetch()
+    const solicitation = await Solicitation
+      .query()
+      .where('id', '=', params.id)
+      .with('interested')
+      .with('units')
+      .with('created_by')
+      .with('documents')
+      .fetch()
+
+
       return response.ok({
         message: "Solicitação encontrada com sucesso",
         data: solicitation
@@ -145,8 +161,14 @@ class SolicitationController {
   }
 
   async addDocument({params, request, response, auth}){
+
     const solicitation = await Solicitation.findOrFail(params.id)
     const data = await request.only(['name','type'])
+    if (auth.type === 'Aluno'&& solicitation.status === STATUS_SOLICITATION.SENT){
+      return response.forbidden({
+        message: "O Aluno não tem permissão para adicionar outros documentos"
+      })
+    }
     const {questions} = await request.only(['questions']);
     //Verifying if there are questions on Document
     if (questions.length){
@@ -155,7 +177,7 @@ class SolicitationController {
         .create({
           ...data,
           status: STATUS_DOC.CREATED,
-          created_by: auth.user.identify_number
+          user_id: auth.user.id
         })
       document.questions().createMany(questions)
       return response.created({
@@ -183,11 +205,15 @@ class SolicitationController {
       return response.badRequest({message: "Solicitação não possui documentos"})
     }
 
-    await solicitation.units().attach(params.unit_id);
+    await SolicitationUnit.create({
+      unit_id: unit.id,
+      solicitation_id: solicitation.id,
+      // status: STATUS_SOLICITATION.SENT,
+      user_id: auth.user.id
+    })
 
     solicitation.merge({
       status: STATUS_SOLICITATION.SENT,
-      created_by: auth.user.identify_number
     })
     await solicitation.save()
 

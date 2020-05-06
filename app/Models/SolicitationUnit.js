@@ -16,13 +16,22 @@ class SolicitationUnit extends Model {
   static boot () {
     super.boot()
     this.addHook('beforeCreate', (solicitationUnit) => {
-      solicitationUnit.status = "created"
+      solicitationUnit.status = "ativo"
     })
 
-    this.addHook('beforeUpdate', (solicitationUnit) => {
-      solicitationUnit.status = "sent"
-    })
+    // this.addHook('beforeUpdate', (solicitationUnit) => {
+    //   solicitationUnit.status = "inativo"
+    // })
   }
+
+  solicitations () {
+    return this.hasMany('App/Models/Solicitation')
+  }
+
+  units () {
+    return this.hasMany('App/Models/Unit')
+  }
+
 }
 
 module.exports = SolicitationUnit
