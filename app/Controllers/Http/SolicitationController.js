@@ -28,12 +28,12 @@ class SolicitationController {
    */
   async index ({ response, auth }) {
 
-    if (auth.user.type === 'Admin'){
-      const solicitations = await Solicitation.all()
+    if (auth.user.type === 'Admin' || auth.user.type === 'Servidor'){
+      const solicitations = await Solicitation.all();
       return response.ok({
         message: "Todas as solicitações",
         data: solicitations
-      })
+      });
     }
     else if (auth.user.type === 'Aluno'){
       const solicitations = await Solicitation
@@ -42,29 +42,8 @@ class SolicitationController {
         .orWhere('created_by_id', auth.user.id)
         .fetch()
       return response.ok({
-        message: `As solicitações do usuário ${auth.user.id}`,
+        message: `As solicitações do aluno ${auth.user.id}`,
         data: solicitations
-      })
-    }
-    else if (auth.user.type === 'Servidor'){
-      const solicitations = await SolicitationUnit
-        .query()
-        .where('unit_id', auth.user.unit_id)
-        .with('solicitations')
-        .fetch()
-
-      const solicitations_owner = await Solicitation
-        .query()
-        .where('created_by_id', auth.user.id)
-        .fetch()
-
-      console.log()
-      return response.ok({
-        message: "",
-        data: {
-          solicitations_created: solicitations_owner,
-          solicitations_onUnit: solicitations
-        }
       })
     }
 
@@ -114,11 +93,29 @@ class SolicitationController {
       .with('documents')
       .fetch()
 
-
+    if (auth.user.type === 'Admin' || auth.user.type === 'Servidor'){
       return response.ok({
         message: "Solicitação encontrada com sucesso",
         data: solicitation
       })
+    }
+    if (auth.user.type === 'Aluno'){
+      if (auth.user.id === solicitation.interested_id || auth.user.id === solicitation.created_by_id){
+        return response.ok({
+          message: "Solicitação encontrada com sucesso",
+          data: solicitation
+        })
+      }
+      else {
+        return response.forbidden({
+          message: "Usuário não tem permissão.",
+        })
+      }
+    }
+
+    return response.badRequest({
+      message: "Tipo de usuário não reconhecido",
+    })
 
   }
 
@@ -147,15 +144,23 @@ class SolicitationController {
    * Delete a solicitation with id.
    * DELETE solicitations/:id
    *
+   * A solicitation can be deleted if status is 'created'.
    */
-  async destroy ({ params, response }) {
+  async destroy ({ params, response, auth }) {
     const solicitation = await Solicitation.findOrFail(params.id)
     if (solicitation.status === STATUS_SOLICITATION.CREATED){
-      await solicitation.delete()
-      return response.ok({
-        message: 'Solicitação excluída com sucesso',
-        deleted: true
-      })
+      if (auth.user.id === solicitation.created_by_id){
+        await solicitation.delete()
+        return response.ok({
+          message: 'Solicitação excluída com sucesso',
+          deleted: true
+        })
+      }
+      else {
+        return response.forbidden({
+          message: 'Usuário não tem perimissão para excluir a solicitação',
+        })
+      }
     }
     return response.badRequest({message: "Solicitação não pode ser excluída"})
   }
