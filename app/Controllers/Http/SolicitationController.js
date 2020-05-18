@@ -158,7 +158,7 @@ class SolicitationController {
       }
       else {
         return response.forbidden({
-          message: 'Usuário não tem perimissão para excluir a solicitação',
+          message: "Usuário não tem perimissão para excluir a solicitação",
         })
       }
     }
@@ -210,29 +210,18 @@ class SolicitationController {
       return response.badRequest({message: "Solicitação não possui documentos"})
     }
 
-    await SolicitationUnit.create({
+    const soliciationUnit = await SolicitationUnit.create({
       unit_id: unit.id,
       solicitation_id: solicitation.id,
-      // status: STATUS_SOLICITATION.SENT,
+      status: STATUS_SOLICITATION.SENT,
       user_id: auth.user.id
     })
 
-    solicitation.merge({
-      status: STATUS_SOLICITATION.SENT,
-    })
-    await solicitation.save()
-
-    solicitation.load('units')
-
     return response.ok({
       message: 'Solicitação enviada com sucesso',
-      data: solicitation
+      data: soliciationUnit
     })
   }
-
-  // async filterSolicitations(solicitations)
-
-  // }
 }
 
 module.exports = SolicitationController
