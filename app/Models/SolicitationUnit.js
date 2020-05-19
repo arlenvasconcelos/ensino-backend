@@ -14,13 +14,14 @@ class SolicitationUnit extends Model {
   }
 
   static boot () {
+    console.log('passou no bot')
     super.boot()
     this.addHook('beforeCreate', (solicitationUnit) => {
-      solicitationUnit.status = "ativo"
+      solicitationUnit.status = "active"
     })
 
     // this.addHook('beforeUpdate', (solicitationUnit) => {
-    //   solicitationUnit.status = "inativo"
+    //   solicitationUnit.status = "inactive"
     // })
   }
 

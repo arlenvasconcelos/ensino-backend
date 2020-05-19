@@ -22,6 +22,7 @@ class SolicitationUnitSchema extends Schema {
         .onDelete('CASCADE')
       table
         .integer('user_id')
+        .notNullable()
         .unsigned()
         .references('id')
         .inTable('users')

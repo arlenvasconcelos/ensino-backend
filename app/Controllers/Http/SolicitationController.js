@@ -10,6 +10,10 @@ const STATUS_SOLICITATION = {
   'SENT': 'sent',
   'FINISHED': 'finished',
 }
+const STATUS_SOLICITATION_UNIT = {
+  'ACTIVE': 'active',
+  'INACTIVE': 'inactive',
+}
 
 /** @typedef {import('@adonisjs/framework/src/Request')} Request */
 /** @typedef {import('@adonisjs/framework/src/Response')} Response */
@@ -146,30 +150,30 @@ class SolicitationController {
    *
    * A solicitation can be deleted if status is 'created'.
    */
-  async destroy ({ params, response, auth }) {
-    const solicitation = await Solicitation.findOrFail(params.id)
-    if (solicitation.status === STATUS_SOLICITATION.CREATED){
-      if (auth.user.id === solicitation.created_by_id){
-        await solicitation.delete()
-        return response.ok({
-          message: 'Solicitação excluída com sucesso',
-          deleted: true
-        })
-      }
-      else {
-        return response.forbidden({
-          message: "Usuário não tem perimissão para excluir a solicitação",
-        })
-      }
-    }
-    return response.badRequest({message: "Solicitação não pode ser excluída"})
-  }
+  // async destroy ({ params, response, auth }) {
+  //   const solicitation = await Solicitation.findOrFail(params.id)
+  //   if (solicitation.status === STATUS_SOLICITATION.CREATED){
+  //     if (auth.user.id === solicitation.created_by_id){
+  //       await solicitation.delete()
+  //       return response.ok({
+  //         message: 'Solicitação excluída com sucesso',
+  //         deleted: true
+  //       })
+  //     }
+  //     else {
+  //       return response.forbidden({
+  //         message: "Usuário não tem perimissão para excluir a solicitação",
+  //       })
+  //     }
+  //   }
+  //   return response.badRequest({message: "Solicitação não pode ser excluída"})
+  // }
 
   async addDocument({params, request, response, auth}){
 
     const solicitation = await Solicitation.findOrFail(params.id)
     const data = await request.only(['name','type'])
-    if (auth.type === 'Aluno'&& solicitation.status === STATUS_SOLICITATION.SENT){
+    if (auth.type === 'Aluno' && solicitation.status === STATUS_SOLICITATION.SENT){
       return response.forbidden({
         message: "O Aluno não tem permissão para adicionar outros documentos"
       })
@@ -192,35 +196,6 @@ class SolicitationController {
     }
 
     return response.badRequest({message: "Documento não foi preenchido"})
-  }
-
-
-  async send ({params, response, auth}){
-    const solicitation = await Solicitation.findOrFail(params.id)
-    const unit = await Unit.findOrFail(params.unit_id)
-
-    const countDocs = await solicitation.documents().getCount()
-
-    if (countDocs > 0){
-      await solicitation.documents()
-        .where('solicitation_id', params.id)
-        .update({ status: STATUS_DOC.SENT })
-    }
-    else {
-      return response.badRequest({message: "Solicitação não possui documentos"})
-    }
-
-    const soliciationUnit = await SolicitationUnit.create({
-      unit_id: unit.id,
-      solicitation_id: solicitation.id,
-      status: STATUS_SOLICITATION.SENT,
-      user_id: auth.user.id
-    })
-
-    return response.ok({
-      message: 'Solicitação enviada com sucesso',
-      data: soliciationUnit
-    })
   }
 }
 

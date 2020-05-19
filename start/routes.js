@@ -73,14 +73,14 @@ Route.group(()=>{
   Route
     .post('/api/solicitations', 'SolicitationController.store')
     .middleware(['auth'])
-  Route
-    .delete('/api/solicitations/:id', 'SolicitationController.destroy')
-    .middleware(['auth','findSolicitation'])
+  // Route
+  //   .delete('/api/solicitations/:id', 'SolicitationController.destroy')
+  //   .middleware(['auth','findSolicitation'])
   Route
     .post('/api/solicitations/:id/documents', 'SolicitationController.addDocument')//add document to Solicitation
     .middleware(['auth','findSolicitation'])
   Route
-    .post('/api/solicitations/:id/send/:unit_id', 'SolicitationController.send')//Send solicitation
+    .post('/api/solicitations/:id/unit/:unit_id', 'SolicitationUnitController.store')//Send solicitation to unit
     .middleware(['auth','findSolicitation'])
 })
 
