@@ -14,7 +14,6 @@ class SolicitationUnit extends Model {
   }
 
   static boot () {
-    console.log('passou no bot')
     super.boot()
     this.addHook('beforeCreate', (solicitationUnit) => {
       solicitationUnit.status = "active"

@@ -173,10 +173,23 @@ class SolicitationController {
 
     const solicitation = await Solicitation.findOrFail(params.id)
     const data = await request.only(['name','type'])
-    if (auth.type === 'Aluno' && solicitation.status === STATUS_SOLICITATION.SENT){
+    if (auth.user.type === 'Aluno' && solicitation.status === STATUS_SOLICITATION.SENT){
       return response.forbidden({
-        message: "O Aluno não tem permissão para adicionar outros documentos"
+        message: "O Aluno não tem permissão para adicionar documentos nessa solicitação."
       })
+    }
+    else if(auth.user.type === 'Servidor'){
+
+      //get acitve solicitation_unit
+      let unitActive = await solicitation.units()
+        .wherePivot('status', STATUS_SOLICITATION_UNIT.ACTIVE)
+        .first()
+
+      if (unitActive && auth.user.unit_id !== unitActive.id){
+        return response.forbidden({
+          message: "A solicitação não se encontra na unidade do usuário."
+        });
+      }
     }
     const {questions} = await request.only(['questions']);
     //Verifying if there are questions on Document

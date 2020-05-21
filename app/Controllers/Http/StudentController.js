@@ -49,7 +49,6 @@ class StudentController {
         ...data,
         user_id: newUser.id
       })
-      console.log(student)
       return response.created({
         message: "Aluno criado com sucesso.",
         data:student

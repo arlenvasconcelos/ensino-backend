@@ -113,6 +113,13 @@ class SolicitationController {
       status: STATUS_SOLICITATION_UNIT.ACTIVE,
       user_id: auth.user.id
     })
+
+    //modify status solicitation to sent
+    solicitation.merge({
+      status: STATUS_SOLICITATION.SENT
+    })
+    await solicitation.save()
+
     return response.ok({
       message: 'Solicitação enviada com sucesso.',
       data: solicitationUnit
