@@ -16,7 +16,10 @@ class SessionController {
 
     const token = await auth.withRefreshToken().attempt(username, password)
 
-    return response.ok({...token, user})
+    response.header('access-token', token.token)
+    response.header('type-token', token.type)
+    response.header('refresh-token', token.refreshToken)
+    return response.ok(user)
   }
 
   async delete ({ auth, response }) {
@@ -32,7 +35,6 @@ class SessionController {
   }
 
   async validateToken ({ auth, response }) {
-    console.log(auth.user.id)
     const user = await User.findOrFail(auth.user.id)
 
     try {
@@ -44,9 +46,12 @@ class SessionController {
   }
 
   async refreshToken ({ auth, response, request }) {
-    const refreshToken = request.header('refresh_token')
+    const refreshToken = request.header('refresh-token')
     const token = await auth.generateForRefreshToken(refreshToken, true)
-    return response.ok({token:token.token})
+    response.header('access-token', token.token)
+    response.header('type-token', token.type)
+    response.header('refresh-token', token.refreshToken)
+    return response.ok()
   }
 
 
