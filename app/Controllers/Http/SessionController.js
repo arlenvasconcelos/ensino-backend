@@ -32,8 +32,12 @@ class SessionController {
   }
 
   async validateToken ({ auth, response }) {
+    console.log(auth.user.id)
+    const user = await User.findOrFail(auth.user.id)
+
     try {
       await auth.check()
+      return response.ok(user)
     } catch (error) {
       response.send('Missing or invalid jwt token')
     }
