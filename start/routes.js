@@ -22,82 +22,88 @@ Route.get('/api', () => {
 
 //Authentication
 Route.group(()=>{
-  Route.post('/api/auth', 'SessionController.store')
+  Route.post('/api/auth/sign_in', 'SessionController.store')
+  Route.delete('/api/auth/sign_out', 'SessionController.delete').middleware(['auth'])
+  Route.get('/api/auth/validate_token', 'SessionController.validateToken').middleware(['auth'])
+  Route.get('/api/auth/refresh_token', 'SessionController.refreshToken')
 })
 
 //User
 Route.group(()=>{
-  Route.get('/api/users', 'UserController.index')
-  Route.get('/api/users/:id', 'UserController.show').middleware(['findUser'])
-  Route.post('/api/users', 'UserController.store')
-  Route.patch('/api/users/:id', 'UserController.update').middleware(['findUser', ])
-  Route.delete('/api/users/:id', 'EmployeeController.destroy').middleware(['findEmployee'])
+  Route.get('/api/users', 'UserController.index').middleware(['auth'])
+  Route.get('/api/users/:id', 'UserController.show').middleware(['auth','findUser'])
+  Route.post('/api/users', 'UserController.store').middleware(['auth', 'adminCustom'])
+  Route.patch('/api/users/:id', 'UserController.update').middleware(['auth', 'adminCustom', 'findUser', ])
+  Route.delete('/api/users/:id', 'EmployeeController.destroy').middleware(['auth', 'adminCustom', 'findEmployee', ])
 })
 
 
 //Units
 Route.group(()=>{
-  Route.get('/api/units', 'UnitController.index')
-  Route.get('/api/units/:id', 'UnitController.show').middleware([ 'findUnit'])
-  Route.post('/api/units', 'UnitController.store')
-  Route.put('/api/units/:id', 'UnitController.update').middleware(['findUnit'])
-  Route.delete('/api/units/:id', 'UnitController.destroy').middleware(['findUnit'])
+  Route.get('/api/units', 'UnitController.index').middleware(['auth'])
+  Route.get('/api/units/:id', 'UnitController.show').middleware(['auth', 'findUnit'])
+  Route.post('/api/units', 'UnitController.store').middleware(['auth', 'adminCustom'])
+  Route.put('/api/units/:id', 'UnitController.update').middleware(['auth', 'adminCustom', 'findUnit'])
+  Route.delete('/api/units/:id', 'UnitController.destroy').middleware(['auth', 'adminCustom', 'findUnit'])
 })
 
 //Courses
 Route.group(()=>{
-  Route.get('/api/courses', 'CourseController.index')
-  Route.get('/api/courses/:id', 'CourseController.show').middleware([ 'findCourse'])
-  Route.post('/api/courses', 'CourseController.store')
-  Route.put('/api/courses/:id', 'CourseController.update').middleware(['findCourse'])
-  Route.delete('/api/courses/:id', 'CourseController.destroy').middleware(['findCourse'])
+  Route.get('/api/courses', 'CourseController.index').middleware(['auth'])
+  Route.get('/api/courses/:id', 'CourseController.show').middleware(['auth', 'findCourse'])
+  Route.post('/api/courses', 'CourseController.store').middleware(['auth', 'adminCustom'])
+  Route.put('/api/courses/:id', 'CourseController.update').middleware(['auth', 'adminCustom', 'findCourse'])
+  Route.delete('/api/courses/:id', 'CourseController.destroy').middleware(['auth', 'adminCustom', 'findCourse'])
 })
 
 //Students
 Route.group(()=>{
-  Route.get('/api/students', 'StudentController.index')
-  Route.get('/api/students/:id', 'StudentController.show').middleware([ 'findStudent'])
-  Route.post('/api/students', 'StudentController.store')
-  Route.patch('/api/students/:id', 'StudentController.update').middleware(['findStudent'])
-  Route.delete('/api/students/:id', 'StudentController.destroy').middleware(['findStudent'])
+  Route.get('/api/students', 'StudentController.index').middleware(['auth'])
+  Route.get('/api/students/:id', 'StudentController.show').middleware(['auth', 'findStudent'])
+  Route.post('/api/students', 'StudentController.store').middleware(['auth', 'adminCustom'])
+  Route.patch('/api/students/:id', 'StudentController.update').middleware(['auth', 'adminCustom', 'findStudent'])
+  Route.delete('/api/students/:id', 'StudentController.destroy').middleware(['auth', 'adminCustom', 'findStudent'])
 })
 
 //Solicitations
 Route.group(()=>{
   Route
     .get('/api/solicitations', 'SolicitationController.index')
+    .middleware(['auth'])
   Route
     .get('/api/solicitations/:id', 'SolicitationController.show')
-    .middleware(['findSolicitation'])
+    .middleware(['auth','findSolicitation'])
   Route
     .post('/api/solicitations', 'SolicitationController.store')
+    .middleware(['auth'])
   // Route
   //   .delete('/api/solicitations/:id', 'SolicitationController.destroy')
-  //   .middleware(['findSolicitation'])
+  //   .middleware(['auth','findSolicitation'])
   Route
     .post('/api/solicitations/:id/documents', 'SolicitationController.addDocument')//add document to Solicitation
-    .middleware(['findSolicitation'])
+    .middleware(['auth','findSolicitation'])
   Route
     .post('/api/solicitations/:id/unit/:unit_id', 'SolicitationUnitController.store')//Send solicitation to unit
-    .middleware(['findSolicitation'])
+    .middleware(['auth','findSolicitation'])
 })
 
 //Documents
 Route.group(()=>{
   Route
     .get('/api/documents', 'DocumentController.index')
+    .middleware(['auth'])
   Route
     .get('/api/documents/:id', 'DocumentController.show')
-    .middleware(['findDocument'])
+    .middleware(['auth','findDocument'])
   Route
     .patch('/api/documents/:id', 'DocumentController.update')
-    .middleware(['findDocument'])
+    .middleware(['auth','findDocument'])
   Route
     .delete('/api/documents/:id', 'DocumentController.destroy')
-    .middleware(['findDocument'])
+    .middleware(['auth','findDocument'])
   Route
     .post('/api/documents/:id/attachments', 'AttachmentController.store')//Add attachment to document
-    .middleware(['findDocument'])
+    .middleware(['auth','findDocument'])
 })
 
 //Attachments
