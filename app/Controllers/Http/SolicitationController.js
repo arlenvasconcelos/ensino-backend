@@ -95,7 +95,7 @@ class SolicitationController {
       .with('units')
       .with('created_by')
       .with('documents')
-      .fetch()
+      .first()
 
     if (auth.user.type === 'Admin' || auth.user.type === 'Servidor'){
       return response.ok({
@@ -104,7 +104,7 @@ class SolicitationController {
       })
     }
     if (auth.user.type === 'Aluno'){
-      if (auth.user.id === solicitation.interested_id || auth.user.id === solicitation.created_by_id){
+      if (auth.user.id === solicitation['interested_id'] || auth.user.id === solicitation['created_by_id']){
         return response.ok({
           message: "Solicitação encontrada com sucesso",
           data: solicitation
@@ -150,24 +150,24 @@ class SolicitationController {
    *
    * A solicitation can be deleted if status is 'created'.
    */
-  // async destroy ({ params, response, auth }) {
-  //   const solicitation = await Solicitation.findOrFail(params.id)
-  //   if (solicitation.status === STATUS_SOLICITATION.CREATED){
-  //     if (auth.user.id === solicitation.created_by_id){
-  //       await solicitation.delete()
-  //       return response.ok({
-  //         message: 'Solicitação excluída com sucesso',
-  //         deleted: true
-  //       })
-  //     }
-  //     else {
-  //       return response.forbidden({
-  //         message: "Usuário não tem perimissão para excluir a solicitação",
-  //       })
-  //     }
-  //   }
-  //   return response.badRequest({message: "Solicitação não pode ser excluída"})
-  // }
+  async destroy ({ params, response, auth }) {
+    const solicitation = await Solicitation.findOrFail(params.id)
+    if (solicitation.status === STATUS_SOLICITATION.CREATED){
+      if (auth.user.id === solicitation.created_by_id){
+        await solicitation.delete()
+        return response.ok({
+          message: 'Solicitação excluída com sucesso',
+          deleted: true
+        })
+      }
+      else {
+        return response.forbidden({
+          message: "Usuário não tem perimissão para excluir a solicitação",
+        })
+      }
+    }
+    return response.badRequest({message: "Solicitação não pode ser excluída"})
+  }
 
   async addDocument({params, request, response, auth}){
 

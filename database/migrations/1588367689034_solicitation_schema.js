@@ -7,7 +7,8 @@ class SolicitationSchema extends Schema {
   up () {
     this.create('solicitations', (table) => {
       table.increments()
-      table.string('type').notNullable()
+      table.integer('type').notNullable()
+      table.string('name').notNullable()
       table.string('status').notNullable()
       table
         .integer('interested_id')

@@ -18,10 +18,11 @@ class UserTypeSchema extends Schema {
   }
 
   down () {
-    this.drop('user_types')
-    this.alter('users', (table) => {
-      table.dropColumn('type')
+    this.table('users', (table) => {
+      table.dropForeign('type')
     })
+    this.drop('user_types')
+
   }
 }
 
