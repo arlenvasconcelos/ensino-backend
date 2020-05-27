@@ -55,7 +55,7 @@ class UserController {
       })
     }
     else if(type === 'Admin'){
-      return response.badRequest({
+      return response.forbidden({
         message: "Não há permissão para criar usuário 'Admin'",
       })
     }
