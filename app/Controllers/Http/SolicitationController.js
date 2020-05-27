@@ -64,12 +64,13 @@ class SolicitationController {
    *
    */
   async store ({ request, response, auth }) {
-    const { type, interested_id } = request.all(['type', 'interested_id'])
+    const { type, interested_id, name } = request.all(['type', 'interested_id', 'name'])
 
     //Student_id will use only, if solicitation have created by user
     const solicitation = await Solicitation
       .create({
         type,
+        name,
         interested_id: interested_id ? interested_id : auth.user.id,
         status: STATUS_SOLICITATION.CREATED,
         created_by_id: auth.user.id
