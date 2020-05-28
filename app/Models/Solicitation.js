@@ -18,7 +18,7 @@ class Solicitation extends Model {
   }
 
   units () {
-    return this.belongsToMany('App/Models/Unit').withPivot(['status', 'user_id'])
+    return this.belongsToMany('App/Models/Unit').withPivot(['status', 'user_id', 'created_at'])
   }
 }
 

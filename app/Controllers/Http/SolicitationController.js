@@ -30,14 +30,26 @@ class SolicitationController {
    * GET solicitations
    *
    */
-  async index ({ response, auth }) {
+  async index ({ request, response, auth }) {
+
+    const {scope} = request.all();
 
     if (auth.user.type === 'Admin' || auth.user.type === 'Servidor'){
-      const solicitations = await Solicitation.all();
-      return response.ok({
-        message: "Todas as solicitações",
-        data: solicitations
-      });
+      if (scope === 'all'){
+        const solicitations = await Solicitation.all();
+        return response.ok({
+          message: "Todas as solicitações",
+          data: solicitations
+        });
+      }
+      else if (scope === 'unit'){
+        const unit = await Unit.findOrFail(auth.user.unit_id)
+        const solicitations = await unit.solicitations().fetch()
+        return response.ok({
+          message: "Todas as solicitações",
+          data: solicitations
+        });
+      }
     }
     else if (auth.user.type === 'Aluno'){
       const solicitations = await Solicitation
